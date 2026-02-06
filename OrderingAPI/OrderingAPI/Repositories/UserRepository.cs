@@ -13,18 +13,18 @@ namespace OrderingAPI.Repositories
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        public List<Users> GetAllUsers()
+        public async Task<List<Users>> GetAllUsers()
         {
             List<Users> users = new List<Users>();
 
             using var conn = new MySqlConnection(_connectionString);
-            conn.Open();
+            await conn.OpenAsync();
 
             using var cmd = new MySqlCommand("SELECT * FROM users", conn);
 
-            using var reader = cmd.ExecuteReader();
+            using var reader = await cmd.ExecuteReaderAsync();
 
-            while(reader.Read())
+            while(await reader.ReadAsync())
             {
                 Users user = new Users
                 {
@@ -38,6 +38,43 @@ namespace OrderingAPI.Repositories
             }
 
             return users;
+        }
+
+        public async Task<Users> GetUser(int userID)
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            using var cmd = new MySqlCommand("SELECT * FROM users WHERE user_id = @userID", conn);
+            cmd.Parameters.AddWithValue("@userID", userID);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            if(await reader.ReadAsync())
+            {
+                return new Users
+                {
+                    user_id = Convert.ToInt32(reader["user_id"]),
+                    full_name = reader["full_name"].ToString(),
+                    email = reader["email"].ToString(),
+                    created_at = Convert.ToDateTime(reader["created_at"])
+                };
+            }
+
+            return null;
+        }
+
+        public async Task AddUser(Users user)
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            using var cmd = new MySqlCommand("CALL AddUser(@fullname, @email, @created)", conn);
+            cmd.Parameters.AddWithValue("@fullname", user.full_name);
+            cmd.Parameters.AddWithValue("@email", user.email);
+            cmd.Parameters.AddWithValue("@created", user.created_at);
+
+            await cmd.ExecuteNonQueryAsync();
         }
     }
 }
