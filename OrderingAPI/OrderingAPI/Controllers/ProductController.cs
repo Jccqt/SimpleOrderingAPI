@@ -40,6 +40,25 @@ namespace OrderingAPI.Controllers
             }
         }
 
+        // GET: api/products?id={}
+        [HttpGet("id")]
+        public async Task<ActionResult<ProductsDTO>> GetProduct(int id)
+        {
+            if(id == 0)
+            {
+                return BadRequest("Invalid product ID.");
+            }
+
+            var product = await _repository.GetProduct(id);
+
+            if(product == null)
+            {
+                return NotFound("Product not found.");
+            }
+
+            return Ok(ProductsToProductsDTO(product));
+        }
+
         private ProductsDTO ProductsToProductsDTO(Products products) =>
             new ProductsDTO
             {
