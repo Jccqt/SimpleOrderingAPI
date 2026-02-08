@@ -2,9 +2,9 @@
 {
     public class ProductsDTO
     {
-        public int ProductID { get; set; }
-        public string ProductName { get; set; }
-        public decimal Price { get; set; }
-        public int Stock { get; set; }
+        public required int ProductID { get; set; }
+        public required string ProductName { get; set; }
+        public required decimal Price { get; set; }
+        public required int Stock { get; set; }
     }
 }

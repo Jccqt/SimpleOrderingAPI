@@ -2,9 +2,9 @@
 {
     public class UsersDTO
     {
-        public int UserID { get; set; }
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string CreatedAt { get; set; }
+        public required int UserID { get; set; }
+        public required string FullName { get; set; }
+        public required string Email { get; set; }
+        public required string CreatedAt { get; set; }
     }
 }
