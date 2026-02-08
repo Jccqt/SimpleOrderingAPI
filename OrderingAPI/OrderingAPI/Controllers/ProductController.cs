@@ -44,19 +44,30 @@ namespace OrderingAPI.Controllers
         [HttpGet("id")]
         public async Task<ActionResult<ProductsDTO>> GetProduct(int id)
         {
-            if(id == 0)
+            try
             {
-                return BadRequest("Invalid product ID.");
+                if (id == 0)
+                {
+                    return BadRequest("Invalid product ID.");
+                }
+
+                var product = await _repository.GetProduct(id);
+
+                if (product == null)
+                {
+                    return NotFound("Product not found.");
+                }
+
+                return Ok(ProductsToProductsDTO(product));
             }
-
-            var product = await _repository.GetProduct(id);
-
-            if(product == null)
+            catch (DbException)
             {
-                return NotFound("Product not found.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
             }
-
-            return Ok(ProductsToProductsDTO(product));
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
+            }
         }
 
         private ProductsDTO ProductsToProductsDTO(Products products) =>
