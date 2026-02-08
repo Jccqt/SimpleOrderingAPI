@@ -70,6 +70,38 @@ namespace OrderingAPI.Controllers
             }
         }
 
+        // POST: api/users
+        [HttpPost]
+        public async Task<IActionResult> AddProduct(AddProductDTO product)
+        {
+            try
+            {
+                if (product == null)
+                {
+                    return BadRequest("Invalid product data.");
+                }
+
+                Products newProduct = new Products
+                {
+                    product_name = product.ProductName,
+                    price = product.price,
+                    stock = product.stock
+                };
+
+                await _repository.AddProduct(newProduct);
+
+                return Ok("Product added successfully!");
+            }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
+            }
+        }
+
         private ProductsDTO ProductsToProductsDTO(Products products) =>
             new ProductsDTO
             {

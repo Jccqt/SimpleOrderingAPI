@@ -62,5 +62,18 @@ namespace OrderingAPI.Repositories
 
             return null;
         }
+
+        public async Task AddProduct(Products product)
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            using var cmd = new MySqlCommand("CALL AddProduct(@productName, @price, @stock)", conn);
+            cmd.Parameters.AddWithValue("@productName", product.product_name);
+            cmd.Parameters.AddWithValue("@price", product.price);
+            cmd.Parameters.AddWithValue("@stock", product.stock);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
     }
 }
