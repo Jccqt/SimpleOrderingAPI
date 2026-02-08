@@ -77,21 +77,32 @@ namespace OrderingAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> PostUser(AddUserDTO user)
         {
-            if(user == null)
+            try
             {
-                return BadRequest("Invalid input data.");
+                if (user == null)
+                {
+                    return BadRequest("Invalid input data.");
+                }
+
+                Users newUser = new Users
+                {
+                    full_name = user.FullName,
+                    email = user.Email,
+                    created_at = DateTime.Now
+                };
+
+                await _repository.AddUser(newUser);
+
+                return Ok("User added successfully!");
             }
-
-            Users newUser = new Users
+            catch (DbException)
             {
-                full_name = user.FullName,
-                email = user.Email,
-                created_at = DateTime.Now
-            };
-
-            await _repository.AddUser(newUser);
-
-            return Ok("User added successfully!");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
+            }
         }
 
         private UsersDTO UserToUsersDTO(Users user) =>
