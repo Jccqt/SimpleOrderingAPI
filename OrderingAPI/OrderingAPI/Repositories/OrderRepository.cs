@@ -118,6 +118,57 @@ namespace OrderingAPI.Repositories
             return null;
         }
 
+        public async Task<List<OrdersWithUserInfoDTO>> GetAllOrdersWithUserInfo()
+        {
+            List<OrdersWithUserInfoDTO> orders = new List<OrdersWithUserInfoDTO>();
+
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            using var cmd = new MySqlCommand("SELECT * FROM orders_with_user_info", conn);
+
+            using var reader = cmd.ExecuteReader();
+
+            while(await reader.ReadAsync())
+            {
+                var order = new OrdersWithUserInfoDTO
+                {
+                    OrderID = Convert.ToInt32(reader["Order ID"]),
+                    UserID = Convert.ToInt32(reader["User ID"]),
+                    UserName = reader["User Name"].ToString(),
+                    Email = reader["Email"].ToString()
+                };
+
+                orders.Add(order);
+            }
+
+            return orders;
+        }
+
+        public async Task<OrdersWithUserInfoDTO> GetOrderWithUserInfo(int id)
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            using var cmd = new MySqlCommand("SELECT * FROM orders_with_user_info WHERE `Order ID` = @orderID", conn);
+            cmd.Parameters.AddWithValue("@orderID", id);
+
+            using var reader = cmd.ExecuteReader();
+
+            if(await reader.ReadAsync())
+            {
+                return new OrdersWithUserInfoDTO
+                {
+                    OrderID = Convert.ToInt32(reader["Order ID"]),
+                    UserID = Convert.ToInt32(reader["User ID"]),
+                    UserName = reader["User Name"].ToString(),
+                    Email = reader["Email"].ToString()
+                };
+            }
+
+            return null;
+        }
+
         public async Task<bool> AddOrder(AddOrderDTO order)
         {
             using var conn = new MySqlConnection(_connectionString);

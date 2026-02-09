@@ -89,11 +89,56 @@ namespace OrderingAPI.Controllers
         [HttpGet("order-item-details/{id}")]
         public async Task<ActionResult<OrderItemDetailsDTO>> GetOrderItemDetails(int id)
         {
-            var order = await _repository.GetOrderItemDetails(id);
+            try
+            {
+                var order = await _repository.GetOrderItemDetails(id);
+
+                if (order == null)
+                {
+                    return NotFound("Order item details not found.");
+                }
+
+                return Ok(order);
+            }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
+            }
+        }
+
+        // GET: api/orders/orders-with-user-info
+        [HttpGet("order-with-user-info")]
+        public async Task<ActionResult<IEnumerable<OrdersWithUserInfoDTO>>> GetOrderWithUserInfo()
+        {
+            try
+            {
+                var orders = await _repository.GetAllOrdersWithUserInfo();
+
+                return Ok(orders);
+            }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
+            }
+        }
+
+        // GET: api/orders/orders-with-user-info?id={}
+        [HttpGet("orders-with-user-info/{id}")]
+        public async Task<ActionResult<OrdersWithUserInfoDTO>> GetOrderWithUserInfo(int id)
+        {
+            var order = await _repository.GetOrderWithUserInfo(id);
 
             if(order == null)
             {
-                return NotFound("Order item details not found.");
+                return NotFound("Order with user info not found.");
             }
 
             return Ok(order);
