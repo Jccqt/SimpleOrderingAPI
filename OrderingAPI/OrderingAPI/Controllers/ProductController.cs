@@ -70,7 +70,7 @@ namespace OrderingAPI.Controllers
             }
         }
 
-        // POST: api/users
+        // POST: api/products
         [HttpPost]
         public async Task<IActionResult> AddProduct(AddProductDTO product)
         {
@@ -81,16 +81,39 @@ namespace OrderingAPI.Controllers
                     return BadRequest("Invalid product data.");
                 }
 
-                Products newProduct = new Products
-                {
-                    product_name = product.ProductName,
-                    price = product.price,
-                    stock = product.stock
-                };
-
-                await _repository.AddProduct(newProduct);
+                await _repository.AddProduct(product);
 
                 return Ok("Product added successfully!");
+            }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
+            }
+        }
+
+        // PUT: api/products?id={}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateProduct(int id, UpdateProductDTO product)
+        {
+            try
+            {
+                if (product == null)
+                {
+                    return BadRequest("Invalid product data.");
+                }
+
+                bool result = await _repository.UpdateProduct(id, product);
+
+                if (!result)
+                {
+                    return NotFound("Product not found.");
+                }
+
+                return NoContent();
             }
             catch (DbException)
             {

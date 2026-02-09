@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using OrderingAPI.DTOs.ProductDTOs;
 using OrderingAPI.Models;
 using System.Data;
 
@@ -64,18 +65,35 @@ namespace OrderingAPI.Repositories
             return null;
         }
 
-        public async Task AddProduct(Products product)
+        public async Task AddProduct(AddProductDTO product)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
             using var cmd = new MySqlCommand("AddProduct", conn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@p_product_name", product.product_name);
-            cmd.Parameters.AddWithValue("@p_price", product.price);
-            cmd.Parameters.AddWithValue("@p_stock", product.stock);
+            cmd.Parameters.AddWithValue("@p_product_name", product.ProductName);
+            cmd.Parameters.AddWithValue("@p_price", product.Price);
+            cmd.Parameters.AddWithValue("@p_stock", product.Stock);
 
             await cmd.ExecuteNonQueryAsync();
         }
-    }
+
+        public async Task<bool> UpdateProduct(int id, UpdateProductDTO product)
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            using var cmd = new MySqlCommand("UpdateProduct", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@p_product_id", id);
+            cmd.Parameters.AddWithValue("@p_product_name", product.ProductName ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@p_price", product.Price ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@p_stock", product.Stock ?? (object)DBNull.Value);
+
+            int rowAffected = await cmd.ExecuteNonQueryAsync();
+
+            return rowAffected > 0;
+        }
+    } 
 }
