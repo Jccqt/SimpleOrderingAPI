@@ -65,6 +65,59 @@ namespace OrderingAPI.Repositories
             return null;
         }
 
+        public async Task<List<OrderItemDetailsDTO>> GetAllOrderItemDetails()
+        {
+            List<OrderItemDetailsDTO> orders = new List<OrderItemDetailsDTO>();
+
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            using var cmd = new MySqlCommand("SELECT * FROM order_items_details", conn);
+
+            using var reader = cmd.ExecuteReader();
+
+            while(await reader.ReadAsync())
+            {
+                var order = new OrderItemDetailsDTO
+                {
+                    OrderID = Convert.ToInt32(reader["Order ID"]),
+                    ProductID = Convert.ToInt32(reader["Product ID"]),
+                    ProductName = reader["Product Name"].ToString(),
+                    OrderQuantity = Convert.ToInt32(reader["Order Quantity"]),
+                    OrderAmount = Convert.ToDecimal(reader["Order Amount"])
+                };
+
+                orders.Add(order);
+            }
+
+            return orders;
+        }
+
+        public async Task<OrderItemDetailsDTO> GetOrderItemDetails(int id)
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            using var cmd = new MySqlCommand("SELECT * FROM order_items_details WHERE `Order ID` = @orderID", conn);
+            cmd.Parameters.AddWithValue("@orderID", id);
+
+            using var reader = cmd.ExecuteReader();
+
+            if(await reader.ReadAsync())
+            {
+                return new OrderItemDetailsDTO
+                {
+                    OrderID = Convert.ToInt32(reader["Order ID"]),
+                    ProductID = Convert.ToInt32(reader["Product ID"]),
+                    ProductName = reader["Product Name"].ToString(),
+                    OrderQuantity = Convert.ToInt32(reader["Order Quantity"]),
+                    OrderAmount = Convert.ToDecimal(reader["Order Amount"])
+                };
+            }
+
+            return null;
+        }
+
         public async Task<bool> AddOrder(AddOrderDTO order)
         {
             using var conn = new MySqlConnection(_connectionString);

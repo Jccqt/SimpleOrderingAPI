@@ -40,7 +40,7 @@ namespace OrderingAPI.Controllers
             }
         }
 
-        // GET: api/orders?id={}
+        // GET: api/orders/5
         [HttpGet("{id}")]
         public async Task<ActionResult<OrdersDTO>> GetOrder(int id)
         {
@@ -65,6 +65,40 @@ namespace OrderingAPI.Controllers
             }
         }
 
+        // GET: api/orders/order-items-details
+        [HttpGet("order-item-details")]
+        public async Task<ActionResult<IEnumerable<OrderItemDetailsDTO>>> GetOrderItemDetails()
+        {
+            try
+            {
+                var orders = await _repository.GetAllOrderItemDetails();
+
+                return Ok(orders);
+            }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
+            }
+        }
+
+        // GET: api/orders/order-items-details?id={}
+        [HttpGet("order-item-details/{id}")]
+        public async Task<ActionResult<OrderItemDetailsDTO>> GetOrderItemDetails(int id)
+        {
+            var order = await _repository.GetOrderItemDetails(id);
+
+            if(order == null)
+            {
+                return NotFound("Order item details not found.");
+            }
+
+            return Ok(order);
+        }
+ 
         // POST: api/orders
         [HttpPost]
         public async Task<IActionResult> AddOrder(AddOrderDTO order)
