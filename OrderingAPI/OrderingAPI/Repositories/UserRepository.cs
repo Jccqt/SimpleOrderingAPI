@@ -65,6 +65,55 @@ namespace OrderingAPI.Repositories
             return null;
         }
 
+        public async Task<List<UserTotalSpendingDTO>> GetAllUserTotalSpending()
+        {
+            List<UserTotalSpendingDTO> users = new List<UserTotalSpendingDTO>();
+
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            using var cmd = new MySqlCommand("SELECT * FROM user_total_spending", conn);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            while(await reader.ReadAsync())
+            {
+                var user = new UserTotalSpendingDTO
+                {
+                    UserID = Convert.ToInt32(reader["User ID"]),
+                    Name = reader["Name"].ToString(),
+                    TotalSpending = Convert.ToDecimal(reader["Total Spending"])
+                };
+
+                users.Add(user);
+            }
+
+            return users;
+        }
+
+        public async Task<UserTotalSpendingDTO> GetUserTotalSpending(int id)
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            using var cmd = new MySqlCommand("SELECT * FROM user_total_spending WHERE `User ID` = @userID", conn);
+            cmd.Parameters.AddWithValue("@userID", id);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            if(await reader.ReadAsync())
+            {
+                return new UserTotalSpendingDTO
+                {
+                    UserID = Convert.ToInt32(reader["User ID"]),
+                    Name = reader["Name"].ToString(),
+                    TotalSpending = Convert.ToDecimal(reader["Total Spending"])
+                };
+            }
+
+            return null;
+        }
+
         public async Task AddUser(AddUserDTO user)
         {
             using var conn = new MySqlConnection(_connectionString);

@@ -41,7 +41,7 @@ namespace OrderingAPI.Controllers
             }
         }
 
-        // GET: api/users?userID={}
+        // GET: api/users/5
         [HttpGet("{userID}")]
         public async Task<ActionResult<UsersDTO>> GetUser(int userID)
         {
@@ -55,6 +55,51 @@ namespace OrderingAPI.Controllers
                 }
 
                 var user = UserToUsersDTO(result);
+
+                return Ok(user);
+            }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
+            }
+        }
+
+        // GET: api/users/user-total-spending
+        [HttpGet("user-total-spending")]
+        public async Task<ActionResult<IEnumerable<UserTotalSpendingDTO>>> GetUserTotalSpending()
+        {
+            try
+            {
+                var users = await _repository.GetAllUserTotalSpending();
+
+                return Ok(users);
+            }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
+            }
+        }
+
+        // GET: api/users/user-total-spending?id={}
+        [HttpGet("user-total-spending/{id}")]
+        public async Task<ActionResult<UserTotalSpendingDTO>> GetUserTotalSpending(int id)
+        {
+            try
+            {
+                var user = await _repository.GetUserTotalSpending(id);
+
+                if (user == null)
+                {
+                    return NotFound("User total spending not found.");
+                }
 
                 return Ok(user);
             }
