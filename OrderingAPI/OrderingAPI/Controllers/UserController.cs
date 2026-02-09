@@ -42,7 +42,7 @@ namespace OrderingAPI.Controllers
         }
 
         // GET: api/users?userID={}
-        [HttpGet("userID")]
+        [HttpGet("{userID}")]
         public async Task<ActionResult<UsersDTO>> GetUser(int userID)
         {
             try
@@ -81,10 +81,10 @@ namespace OrderingAPI.Controllers
             {
                 if (user == null)
                 {
-                    return BadRequest("Invalid input data.");
+                    return BadRequest("Invalid user data.");
                 }
 
-                Users newUser = new Users
+                var newUser = new Users
                 {
                     full_name = user.FullName,
                     email = user.Email,
@@ -94,6 +94,43 @@ namespace OrderingAPI.Controllers
                 await _repository.AddUser(newUser);
 
                 return Ok("User added successfully!");
+            }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
+            }
+        }
+
+        // PUT: api/users?id={}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, UpdateUserDTO user)
+        {
+            try
+            {
+                if (user == null)
+                {
+                    return BadRequest("Invalid user data.");
+                }
+
+                var userToUpdate = new Users
+                {
+                    user_id = id,
+                    full_name = user.FullName,
+                    email = user.Email
+                };
+
+                bool result = await _repository.UpdateUser(userToUpdate);
+
+                if (!result)
+                {
+                    return NotFound("User not found.");
+                }
+
+                return NoContent();
             }
             catch (DbException)
             {

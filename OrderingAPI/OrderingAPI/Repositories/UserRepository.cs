@@ -69,12 +69,29 @@ namespace OrderingAPI.Repositories
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            using var cmd = new MySqlCommand("CALL AddUser(@fullname, @email, @created)", conn);
-            cmd.Parameters.AddWithValue("@fullname", user.full_name);
-            cmd.Parameters.AddWithValue("@email", user.email);
-            cmd.Parameters.AddWithValue("@created", user.created_at);
+            using var cmd = new MySqlCommand("AddUser", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@p_full_name", user.full_name);
+            cmd.Parameters.AddWithValue("@p_email", user.email);
+            cmd.Parameters.AddWithValue("@p_created_at", user.created_at);
 
             await cmd.ExecuteNonQueryAsync();
+        }
+
+        public async Task<bool> UpdateUser(Users user)
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            using var cmd = new MySqlCommand("UpdateUser", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@p_user_id", user.user_id);
+            cmd.Parameters.AddWithValue("@p_full_name", user.full_name);
+            cmd.Parameters.AddWithValue("@p_email", user.email);
+
+            int rowAffected = await cmd.ExecuteNonQueryAsync();
+
+            return rowAffected > 0;
         }
     }
 }
