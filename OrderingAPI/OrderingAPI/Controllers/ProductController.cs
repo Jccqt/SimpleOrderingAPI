@@ -41,7 +41,7 @@ namespace OrderingAPI.Controllers
         }
 
         // GET: api/products?id={}
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<ProductsDTO>> GetProduct(int id)
         {
             try

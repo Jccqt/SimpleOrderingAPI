@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using OrderingAPI.Models;
+using System.Data;
 
 namespace OrderingAPI.Repositories
 {
@@ -68,10 +69,11 @@ namespace OrderingAPI.Repositories
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            using var cmd = new MySqlCommand("CALL AddProduct(@productName, @price, @stock)", conn);
-            cmd.Parameters.AddWithValue("@productName", product.product_name);
-            cmd.Parameters.AddWithValue("@price", product.price);
-            cmd.Parameters.AddWithValue("@stock", product.stock);
+            using var cmd = new MySqlCommand("AddProduct", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@p_product_name", product.product_name);
+            cmd.Parameters.AddWithValue("@p_price", product.price);
+            cmd.Parameters.AddWithValue("@p_stock", product.stock);
 
             await cmd.ExecuteNonQueryAsync();
         }
