@@ -23,7 +23,7 @@ namespace OrderingAPI.Repositories
 
             using var cmd = new MySqlCommand("SELECT * FROM products", conn);
 
-            using var reader = cmd.ExecuteReader();
+            using var reader = await cmd.ExecuteReaderAsync();
 
             while(await reader.ReadAsync())
             {
@@ -49,7 +49,7 @@ namespace OrderingAPI.Repositories
             using var cmd = new MySqlCommand("SELECT * FROM products WHERE product_id = @productID", conn);
             cmd.Parameters.AddWithValue("@productID", id);
             
-            using var reader = cmd.ExecuteReader();
+            using var reader = await cmd.ExecuteReaderAsync();
 
             if(await reader.ReadAsync())
             {

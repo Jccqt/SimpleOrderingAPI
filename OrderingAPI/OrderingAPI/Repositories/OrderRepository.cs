@@ -23,7 +23,7 @@ namespace OrderingAPI.Repositories
 
             using var cmd = new MySqlCommand("SELECT * FROM orders", conn);
             
-            using var reader = cmd.ExecuteReader();
+            using var reader = await cmd.ExecuteReaderAsync();
 
             while(await reader.ReadAsync())
             {
@@ -49,7 +49,7 @@ namespace OrderingAPI.Repositories
             using var cmd = new MySqlCommand("SELECT * FROM orders WHERE order_id = @orderID", conn);
             cmd.Parameters.AddWithValue("@orderID", id);
 
-            using var reader = cmd.ExecuteReader();
+            using var reader = await cmd.ExecuteReaderAsync();
 
             if(await reader.ReadAsync())
             {
@@ -74,7 +74,7 @@ namespace OrderingAPI.Repositories
 
             using var cmd = new MySqlCommand("SELECT * FROM order_items_details", conn);
 
-            using var reader = cmd.ExecuteReader();
+            using var reader = await cmd.ExecuteReaderAsync();
 
             while(await reader.ReadAsync())
             {
@@ -101,7 +101,7 @@ namespace OrderingAPI.Repositories
             using var cmd = new MySqlCommand("SELECT * FROM order_items_details WHERE `Order ID` = @orderID", conn);
             cmd.Parameters.AddWithValue("@orderID", id);
 
-            using var reader = cmd.ExecuteReader();
+            using var reader = await cmd.ExecuteReaderAsync();
 
             if(await reader.ReadAsync())
             {
@@ -127,7 +127,7 @@ namespace OrderingAPI.Repositories
 
             using var cmd = new MySqlCommand("SELECT * FROM orders_with_user_info", conn);
 
-            using var reader = cmd.ExecuteReader();
+            using var reader = await cmd.ExecuteReaderAsync();
 
             while(await reader.ReadAsync())
             {
@@ -153,7 +153,7 @@ namespace OrderingAPI.Repositories
             using var cmd = new MySqlCommand("SELECT * FROM orders_with_user_info WHERE `Order ID` = @orderID", conn);
             cmd.Parameters.AddWithValue("@orderID", id);
 
-            using var reader = cmd.ExecuteReader();
+            using var reader = await cmd.ExecuteReaderAsync();
 
             if(await reader.ReadAsync())
             {
