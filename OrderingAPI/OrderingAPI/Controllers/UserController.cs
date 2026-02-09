@@ -47,11 +47,6 @@ namespace OrderingAPI.Controllers
         {
             try
             {
-                if(userID == 0)
-                {
-                    return BadRequest("Invalid User ID.");
-                }
-
                 var result = await _repository.GetUser(userID);
 
                 if(result == null)

@@ -74,7 +74,6 @@ namespace OrderingAPI.Repositories
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@p_full_name", user.FullName);
             cmd.Parameters.AddWithValue("@p_email", user.Email);
-            cmd.Parameters.AddWithValue("@p_created_at", DateTime.Now);
 
             await cmd.ExecuteNonQueryAsync();
         }

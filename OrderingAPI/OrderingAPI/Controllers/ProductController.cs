@@ -46,11 +46,6 @@ namespace OrderingAPI.Controllers
         {
             try
             {
-                if (id == 0)
-                {
-                    return BadRequest("Invalid product ID.");
-                }
-
                 var product = await _repository.GetProduct(id);
 
                 if (product == null)
