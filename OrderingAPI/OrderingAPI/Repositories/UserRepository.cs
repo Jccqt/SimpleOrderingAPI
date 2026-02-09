@@ -1,6 +1,7 @@
 ﻿using OrderingAPI.Models;
 using MySql.Data.MySqlClient;
 using System.Data;
+using OrderingAPI.DTOs.UserDTOs;
 
 namespace OrderingAPI.Repositories
 {
@@ -64,30 +65,30 @@ namespace OrderingAPI.Repositories
             return null;
         }
 
-        public async Task AddUser(Users user)
+        public async Task AddUser(AddUserDTO user)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
             using var cmd = new MySqlCommand("AddUser", conn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@p_full_name", user.full_name);
-            cmd.Parameters.AddWithValue("@p_email", user.email);
-            cmd.Parameters.AddWithValue("@p_created_at", user.created_at);
+            cmd.Parameters.AddWithValue("@p_full_name", user.FullName);
+            cmd.Parameters.AddWithValue("@p_email", user.Email);
+            cmd.Parameters.AddWithValue("@p_created_at", DateTime.Now);
 
             await cmd.ExecuteNonQueryAsync();
         }
 
-        public async Task<bool> UpdateUser(Users user)
+        public async Task<bool> UpdateUser(int id, UpdateUserDTO user)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
             using var cmd = new MySqlCommand("UpdateUser", conn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@p_user_id", user.user_id);
-            cmd.Parameters.AddWithValue("@p_full_name", user.full_name);
-            cmd.Parameters.AddWithValue("@p_email", user.email);
+            cmd.Parameters.AddWithValue("@p_user_id", id);
+            cmd.Parameters.AddWithValue("@p_full_name", user.FullName);
+            cmd.Parameters.AddWithValue("@p_email", user.Email);
 
             int rowAffected = await cmd.ExecuteNonQueryAsync();
 

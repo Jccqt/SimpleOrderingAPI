@@ -87,9 +87,9 @@ namespace OrderingAPI.Repositories
             using var cmd = new MySqlCommand("UpdateProduct", conn);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@p_product_id", id);
-            cmd.Parameters.AddWithValue("@p_product_name", product.ProductName ?? (object)DBNull.Value);
-            cmd.Parameters.AddWithValue("@p_price", product.Price ?? (object)DBNull.Value);
-            cmd.Parameters.AddWithValue("@p_stock", product.Stock ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@p_product_name", product.ProductName);
+            cmd.Parameters.AddWithValue("@p_price", product.Price);
+            cmd.Parameters.AddWithValue("@p_stock", product.Stock);
 
             int rowAffected = await cmd.ExecuteNonQueryAsync();
 

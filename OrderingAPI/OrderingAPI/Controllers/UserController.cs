@@ -84,14 +84,7 @@ namespace OrderingAPI.Controllers
                     return BadRequest("Invalid user data.");
                 }
 
-                var newUser = new Users
-                {
-                    full_name = user.FullName,
-                    email = user.Email,
-                    created_at = DateTime.Now
-                };
-
-                await _repository.AddUser(newUser);
+                await _repository.AddUser(user);
 
                 return Ok("User added successfully!");
             }
@@ -116,14 +109,7 @@ namespace OrderingAPI.Controllers
                     return BadRequest("Invalid user data.");
                 }
 
-                var userToUpdate = new Users
-                {
-                    user_id = id,
-                    full_name = user.FullName,
-                    email = user.Email
-                };
-
-                bool result = await _repository.UpdateUser(userToUpdate);
+                bool result = await _repository.UpdateUser(id, user);
 
                 if (!result)
                 {
