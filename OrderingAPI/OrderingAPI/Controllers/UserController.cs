@@ -22,151 +22,127 @@ namespace OrderingAPI.Controllers
 
         // GET: api/users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UsersDTO>>> GetUsers()
+        public async Task<ActionResult<ServiceResponse<IEnumerable<UsersDTO>>>> GetUsers()
         {
-            try
-            {
-                var result = await _repository.GetAllUsers();
+            var result = await _repository.GetAllUsers();
 
-                var users = result.Select(u => UserToUsersDTO(u));
+            var users = result.Select(u => UserToUsersDTO(u));
 
-                return Ok(users);
-            }
-            catch (DbException)
+            var response = new ServiceResponse<IEnumerable<UsersDTO>>
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
-            }
+                Success = true,
+                Message = "Users retrieved successfully",
+                Data = users
+            };
+
+            return Ok(response);
         }
 
         // GET: api/users/5
         [HttpGet("{userID}")]
-        public async Task<ActionResult<UsersDTO>> GetUser(int userID)
+        public async Task<ActionResult<ServiceResponse<UsersDTO>>> GetUser(int userID)
         {
-            try
-            {
-                var result = await _repository.GetUser(userID);
+            var result = await _repository.GetUser(userID);
 
-                if(result == null)
-                {
-                    return NotFound("User not found.");
-                }
-
-                var user = UserToUsersDTO(result);
-
-                return Ok(user);
-            }
-            catch (DbException)
+            if (result == null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
+                return NotFound("User not found.");
             }
-            catch (Exception)
+
+            var user = UserToUsersDTO(result);
+
+            var response = new ServiceResponse<UsersDTO>
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
-            }
+                Success = true,
+                Message = "User retrieved successfully",
+                Data = user
+            };
+
+            return Ok(response);
         }
 
         // GET: api/users/user-total-spending
         [HttpGet("user-total-spending")]
-        public async Task<ActionResult<IEnumerable<UserTotalSpendingDTO>>> GetUserTotalSpending()
+        public async Task<ActionResult<ServiceResponse<IEnumerable<UserTotalSpendingDTO>>>> GetUserTotalSpending()
         {
-            try
-            {
-                var users = await _repository.GetAllUserTotalSpending();
+            var users = await _repository.GetAllUserTotalSpending();
 
-                return Ok(users);
-            }
-            catch (DbException)
+            var response = new ServiceResponse<IEnumerable<UserTotalSpendingDTO>>
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
-            }
+                Success = true,
+                Message = "Users total spending retrieved successfully",
+                Data = users
+            };
+
+            return Ok(response);
         }
 
         // GET: api/users/user-total-spending?id={}
         [HttpGet("user-total-spending/{id}")]
-        public async Task<ActionResult<UserTotalSpendingDTO>> GetUserTotalSpending(int id)
+        public async Task<ActionResult<ServiceResponse<UserTotalSpendingDTO>>> GetUserTotalSpending(int id)
         {
-            try
-            {
-                var user = await _repository.GetUserTotalSpending(id);
+            var user = await _repository.GetUserTotalSpending(id);
 
-                if (user == null)
-                {
-                    return NotFound("User total spending not found.");
-                }
+            if (user == null)
+            {
+                return NotFound("User total spending not found.");
+            }
 
-                return Ok(user);
-            }
-            catch (DbException)
+            var response = new ServiceResponse<UserTotalSpendingDTO>
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
-            }
+                Success = true,
+                Message = "User total spending retrieved successfully",
+                Data = user
+            };
+
+            return Ok(response);
         }
 
         // POST: api/users
         [HttpPost]
-        public async Task<IActionResult> PostUser(AddUserDTO user)
+        public async Task<ActionResult<ServiceResponse<AddUserDTO>>> PostUser(AddUserDTO user)
         {
-            try
+            if (user == null)
             {
-                if (user == null)
-                {
-                    return BadRequest("Invalid user data.");
-                }
+                return BadRequest("Invalid user data.");
+            }
 
-                await _repository.AddUser(user);
+            await _repository.AddUser(user);
 
-                return Ok("User added successfully!");
-            }
-            catch (DbException)
+            var response = new ServiceResponse<AddUserDTO>
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
-            }
+                Success = true,
+                Message = "User added successfully!",
+                Data = user
+            };
+
+            return Ok(response);
         }
 
         // PUT: api/users?id={}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, UpdateUserDTO user)
+        public async Task<ActionResult<ServiceResponse<UpdateUserDTO>>> UpdateUser(int id, UpdateUserDTO user)
         {
-            try
+            if (user == null)
             {
-                if (user == null)
-                {
-                    return BadRequest("Invalid user data.");
-                }
-
-                bool result = await _repository.UpdateUser(id, user);
-
-                if (!result)
-                {
-                    return NotFound("User not found.");
-                }
-
-                return NoContent();
+                return BadRequest("Invalid user data.");
             }
-            catch (DbException)
+
+            bool result = await _repository.UpdateUser(id, user);
+
+            if (!result)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
+                return NotFound("User not found.");
             }
-            catch (Exception)
+
+            var response = new ServiceResponse<UpdateUserDTO>
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
-            }
+                Success = true,
+                Message = "User updated successfully!",
+                Data = user
+            };
+
+            return Ok(response);
         }
 
         private UsersDTO UserToUsersDTO(Users user) =>

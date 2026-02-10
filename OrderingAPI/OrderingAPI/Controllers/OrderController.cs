@@ -21,119 +21,99 @@ namespace OrderingAPI.Controllers
 
         // GET: api/orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrdersDTO>>> GetOrders()
+        public async Task<ActionResult<ServiceResponse<IEnumerable<OrdersDTO>>>> GetOrders()
         {
-            try
-            {
-                var result = await _repository.GetAllOrders();
+            var result = await _repository.GetAllOrders();
 
-                var orders = result.Select(o => OrdersToOrdersDTO(o));
+            var orders = result.Select(o => OrdersToOrdersDTO(o));
 
-                return Ok(orders);
-            }
-            catch (DbException)
+            var response = new ServiceResponse<IEnumerable<OrdersDTO>>
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
-            }
+                Success = true,
+                Message = "Orders retrieved successfully!",
+                Data = orders
+            };
+
+            return Ok(response);
         }
 
         // GET: api/orders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<OrdersDTO>> GetOrder(int id)
+        public async Task<ActionResult<ServiceResponse<OrdersDTO>>> GetOrder(int id)
         {
-            try
-            {
-                var order = await _repository.GetOrder(id);
+            var order = await _repository.GetOrder(id);
 
-                if(order == null)
-                {
-                    return NotFound("Order not found.");
-                }
+            if (order == null)
+            {
+                return NotFound("Order not found.");
+            }
 
-                return Ok(OrdersToOrdersDTO(order));
-            }
-            catch (DbException)
+            var response = new ServiceResponse<OrdersDTO>
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
-            }
+                Success = true,
+                Message = "Order retrieved successfully!",
+                Data = OrdersToOrdersDTO(order)
+            };
+
+            return Ok(response);
         }
 
         // GET: api/orders/order-items-details
         [HttpGet("order-item-details")]
-        public async Task<ActionResult<IEnumerable<OrderItemDetailsDTO>>> GetOrderItemDetails()
+        public async Task<ActionResult<ServiceResponse<IEnumerable<OrderItemDetailsDTO>>>> GetOrderItemDetails()
         {
-            try
-            {
-                var orders = await _repository.GetAllOrderItemDetails();
+            var orders = await _repository.GetAllOrderItemDetails();
 
-                return Ok(orders);
-            }
-            catch (DbException)
+            var response = new ServiceResponse<IEnumerable<OrderItemDetailsDTO>>
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
-            }
+                Success = true,
+                Message = "Order item details retrieved successfully!",
+                Data = orders
+            };
+
+            return Ok(response);
         }
 
         // GET: api/orders/order-items-details?id={}
         [HttpGet("order-item-details/{id}")]
-        public async Task<ActionResult<OrderItemDetailsDTO>> GetOrderItemDetails(int id)
+        public async Task<ActionResult<ServiceResponse<OrderItemDetailsDTO>>> GetOrderItemDetails(int id)
         {
-            try
-            {
-                var order = await _repository.GetOrderItemDetails(id);
+            var order = await _repository.GetOrderItemDetails(id);
 
-                if (order == null)
-                {
-                    return NotFound("Order item details not found.");
-                }
+            if (order == null)
+            {
+                return NotFound("Order item details not found.");
+            }
 
-                return Ok(order);
-            }
-            catch (DbException)
+            var response = new ServiceResponse<OrderItemDetailsDTO>
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
-            }
+                Success = true,
+                Message = "Order item details retrieved successfully!",
+                Data = order
+            };
+
+            return Ok(response);
         }
 
         // GET: api/orders/orders-with-user-info
         [HttpGet("order-with-user-info")]
-        public async Task<ActionResult<IEnumerable<OrdersWithUserInfoDTO>>> GetOrderWithUserInfo()
+        public async Task<ActionResult<ServiceResponse<IEnumerable<OrdersWithUserInfoDTO>>>> GetOrderWithUserInfo()
         {
-            try
-            {
-                var orders = await _repository.GetAllOrdersWithUserInfo();
+            var orders = await _repository.GetAllOrdersWithUserInfo();
 
-                return Ok(orders);
-            }
-            catch (DbException)
+            var response = new ServiceResponse<IEnumerable<OrdersWithUserInfoDTO>>
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
-            }
+                Success = true,
+                Message = "Orders with user info retrieved successfully!",
+                Data = orders
+            };
+
+            return Ok(response);
         }
 
         // GET: api/orders/orders-with-user-info?id={}
         [HttpGet("orders-with-user-info/{id}")]
-        public async Task<ActionResult<OrdersWithUserInfoDTO>> GetOrderWithUserInfo(int id)
+        public async Task<ActionResult<ServiceResponse<OrdersWithUserInfoDTO>>> GetOrderWithUserInfo(int id)
         {
             var order = await _repository.GetOrderWithUserInfo(id);
 
@@ -142,37 +122,40 @@ namespace OrderingAPI.Controllers
                 return NotFound("Order with user info not found.");
             }
 
-            return Ok(order);
+            var response = new ServiceResponse<OrdersWithUserInfoDTO>
+            {
+                Success = true,
+                Message = "Order with user info retrieved successfully!",
+                Data = order
+            };
+
+            return Ok(response);
         }
  
         // POST: api/orders
         [HttpPost]
-        public async Task<IActionResult> AddOrder(AddOrderDTO order)
+        public async Task<ActionResult<ServiceResponse<AddOrderDTO>>> AddOrder(AddOrderDTO order)
         {
-            try
+            if (order == null)
             {
-                if (order == null)
-                {
-                    return BadRequest("Invalid order input.");
-                }
-
-                bool success = await _repository.AddOrder(order);
-
-                if (!success)
-                {
-                    return NotFound("Cannot add order, user not found.");
-                }
-
-                return Ok("Order added successfully!");
+                return BadRequest("Invalid order input.");
             }
-            catch (DbException)
+
+            bool success = await _repository.AddOrder(order);
+
+            if (!success)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
+                return NotFound("Cannot add order, user not found.");
             }
-            catch (Exception)
+
+            var response = new ServiceResponse<AddOrderDTO>
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
-            }
+                Success = true,
+                Message = "Order added successfully!",
+                Data = order
+            };
+
+            return Ok(response);
         }
 
         private OrdersDTO OrdersToOrdersDTO(Orders order) =>

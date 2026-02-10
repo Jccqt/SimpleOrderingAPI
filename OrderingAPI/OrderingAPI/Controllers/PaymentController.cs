@@ -21,49 +21,41 @@ namespace OrderingAPI.Controllers
 
         // GET: api/payments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PaymentDTO>>> GetPayments()
+        public async Task<ActionResult<ServiceResponse<IEnumerable<PaymentDTO>>>> GetPayments()
         {
-            try
-            {
-                var result = await _repository.GetAllPayments();
+            var result = await _repository.GetAllPayments();
 
-                var payments = result.Select(p => PaymentsToPaymentDTO(p));
+            var payments = result.Select(p => PaymentsToPaymentDTO(p));
 
-                return Ok(payments);
-            }
-            catch (DbException)
+            var response = new ServiceResponse<IEnumerable<PaymentDTO>>
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
-            }
+                Success = true,
+                Message = "Payments retrieved successfully!",
+                Data = payments
+            };
+
+            return Ok(response);
         }
 
         // POST: api/payments
         [HttpPost]
-        public async Task<IActionResult> AddPayment(AddPaymentDTO payment)
+        public async Task<ActionResult<ServiceResponse<AddPaymentDTO>>> AddPayment(AddPaymentDTO payment)
         {
-            try
-            {
-                bool success = await _repository.AddPayment(payment);
+            bool success = await _repository.AddPayment(payment);
 
-                if (!success)
-                {
-                    return NotFound("Order ID not found.");
-                }
+            if (!success)
+            {
+                return NotFound("Order ID not found.");
+            }
 
-                return Ok("Payment added successfully!");
-            }
-            catch (DbException)
+            var response = new ServiceResponse<AddPaymentDTO>
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
-            }
+                Success = true,
+                Message = "Payment added successfull!",
+                Data = payment
+            };
+
+            return Ok(response);
         }
 
         private PaymentDTO PaymentsToPaymentDTO(Payments payments) =>

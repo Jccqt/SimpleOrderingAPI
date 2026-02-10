@@ -21,104 +21,88 @@ namespace OrderingAPI.Controllers
 
         // GET: api/products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductsDTO>>> GetProducts()
+        public async Task<ActionResult<ServiceResponse<IEnumerable<ProductsDTO>>>> GetProducts()
         {
-            try
-            {
-                var result = await _repository.GetAllProducts();
+            var result = await _repository.GetAllProducts();
 
-                var products = result.Select(p => ProductsToProductsDTO(p));
+            var products = result.Select(p => ProductsToProductsDTO(p));
 
-                return Ok(products);
-            }
-            catch (DbException)
+            var response = new ServiceResponse<IEnumerable<ProductsDTO>>
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
-            }
+                Success = true,
+                Message = "Products retrieved successfully!",
+                Data = products
+            };
+
+            return Ok(products);
         }
 
         // GET: api/products?id={}
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductsDTO>> GetProduct(int id)
+        public async Task<ActionResult<ServiceResponse<ProductsDTO>>> GetProduct(int id)
         {
-            try
-            {
-                var product = await _repository.GetProduct(id);
+            var product = await _repository.GetProduct(id);
 
-                if (product == null)
-                {
-                    return NotFound("Product not found.");
-                }
+            if (product == null)
+            {
+                return NotFound("Product not found.");
+            }
 
-                return Ok(ProductsToProductsDTO(product));
-            }
-            catch (DbException)
+            var response = new ServiceResponse<ProductsDTO>
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
-            }
+                Success = true,
+                Message = "Product retrieved successfully!",
+                Data = ProductsToProductsDTO(product)
+            };
+
+            return Ok(response);
         }
 
         // POST: api/products
         [HttpPost]
-        public async Task<IActionResult> AddProduct(AddProductDTO product)
+        public async Task<ActionResult<ServiceResponse<AddProductDTO>>> AddProduct(AddProductDTO product)
         {
-            try
+            if (product == null)
             {
-                if (product == null)
-                {
-                    return BadRequest("Invalid product data.");
-                }
+                return BadRequest("Invalid product data.");
+            }
 
-                await _repository.AddProduct(product);
+            await _repository.AddProduct(product);
 
-                return Ok("Product added successfully!");
-            }
-            catch (DbException)
+            var response = new ServiceResponse<AddProductDTO>
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
-            }
+                Success = true,
+                Message = "Product added successfully!",
+                Data = product
+            };
+
+            return Ok(response);
         }
 
         // PUT: api/products?id={}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, UpdateProductDTO product)
+        public async Task<ActionResult<ServiceResponse<UpdateProductDTO>>> UpdateProduct(int id, UpdateProductDTO product)
         {
-            try
+            if (product == null)
             {
-                if (product == null)
-                {
-                    return BadRequest("Invalid product data.");
-                }
-
-                bool result = await _repository.UpdateProduct(id, product);
-
-                if (!result)
-                {
-                    return NotFound("Product not found.");
-                }
-
-                return NoContent();
+                return BadRequest("Invalid product data.");
             }
-            catch (DbException)
+
+            bool result = await _repository.UpdateProduct(id, product);
+
+            if (!result)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured on database.");
+                return NotFound("Product not found.");
             }
-            catch (Exception)
+
+            var response = new ServiceResponse<UpdateProductDTO>
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured.");
-            }
+                Success = true,
+                Message = "Product updated successfully!",
+                Data = product
+            };
+
+            return Ok(response);
         }
 
         private ProductsDTO ProductsToProductsDTO(Products products) =>
