@@ -44,7 +44,7 @@ namespace OrderingAPI.MiddleWare
                 Success = false,
                 Message = "An internal error occured.",
                 Data = exception.Message,
-                TradeID = traceID
+                TraceID = traceID
             };
 
             var json = JsonSerializer.Serialize(response);
