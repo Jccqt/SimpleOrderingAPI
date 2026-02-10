@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderingAPI.DTOs.ProductDTOs;
+using OrderingAPI.Interfaces;
 using OrderingAPI.Models;
 using OrderingAPI.Repositories;
 using System.Data.Common;
@@ -11,9 +12,9 @@ namespace OrderingAPI.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly ProductRepository _repository;
+        private readonly IProductRepository _repository;
 
-        public ProductController(ProductRepository repository)
+        public ProductController(IProductRepository repository)
         {
             _repository = repository;
         }

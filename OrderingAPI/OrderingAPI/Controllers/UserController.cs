@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderingAPI.DTOs.UserDTOs;
+using OrderingAPI.Interfaces;
 using OrderingAPI.Models;
 using OrderingAPI.Repositories;
 using System.Data.Common;
@@ -12,9 +13,9 @@ namespace OrderingAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly UserRepository _repository;
+        private readonly IUserRepository _repository;
 
-        public UserController(UserRepository repository)
+        public UserController(IUserRepository repository)
         {
             _repository = repository;   
         }

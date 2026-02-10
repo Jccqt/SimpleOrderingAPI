@@ -1,4 +1,5 @@
 using OrderingAPI.Controllers;
+using OrderingAPI.Interfaces;
 using OrderingAPI.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,11 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped<ProductRepository>();
-builder.Services.AddScoped<OrderRepository>();
-builder.Services.AddScoped<OrderItemRepository>();
-builder.Services.AddScoped<PaymentRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -1,11 +1,12 @@
 ﻿using MySql.Data.MySqlClient;
 using OrderingAPI.DTOs.PaymentDTOs;
+using OrderingAPI.Interfaces;
 using OrderingAPI.Models;
 using System.Data;
 
 namespace OrderingAPI.Repositories
 {
-    public class PaymentRepository
+    public class PaymentRepository : IPaymentRepository
     {
         private readonly string _connectionString;
 

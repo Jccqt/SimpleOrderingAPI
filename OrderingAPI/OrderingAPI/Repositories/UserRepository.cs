@@ -2,10 +2,11 @@
 using MySql.Data.MySqlClient;
 using System.Data;
 using OrderingAPI.DTOs.UserDTOs;
+using OrderingAPI.Interfaces;
 
 namespace OrderingAPI.Repositories
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly string _connectionString;
 

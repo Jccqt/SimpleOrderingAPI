@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderingAPI.DTOs.OrderDTOs;
+using OrderingAPI.Interfaces;
 using OrderingAPI.Models;
 using OrderingAPI.Repositories;
 using System.Data.Common;
@@ -11,9 +12,9 @@ namespace OrderingAPI.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly OrderRepository _repository;
+        private readonly IOrderRepository _repository;
 
-        public OrderController(OrderRepository repository)
+        public OrderController(IOrderRepository repository)
         {
             _repository = repository;
         }

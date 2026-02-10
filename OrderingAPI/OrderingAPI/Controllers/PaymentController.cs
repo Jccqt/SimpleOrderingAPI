@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderingAPI.DTOs.PaymentDTOs;
+using OrderingAPI.Interfaces;
 using OrderingAPI.Models;
 using OrderingAPI.Repositories;
 using System.Data.Common;
@@ -11,9 +12,9 @@ namespace OrderingAPI.Controllers
     [ApiController]
     public class PaymentController : ControllerBase
     {
-        private readonly PaymentRepository _repository;
+        private readonly IPaymentRepository _repository;
 
-        public PaymentController(PaymentRepository repository)
+        public PaymentController(IPaymentRepository repository)
         {
             _repository = repository;
         }

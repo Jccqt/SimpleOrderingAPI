@@ -1,11 +1,12 @@
 ﻿using MySql.Data.MySqlClient;
 using OrderingAPI.DTOs.OrderItemDTOs;
+using OrderingAPI.Interfaces;
 using OrderingAPI.Models;
 using System.Data;
 
 namespace OrderingAPI.Repositories
 {
-    public class OrderItemRepository
+    public class OrderItemRepository : IOrderItemRepository
     {
         private readonly string _connectionString;
 
