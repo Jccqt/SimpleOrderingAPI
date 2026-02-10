@@ -45,7 +45,11 @@ namespace OrderingAPI.Controllers
 
             if (product == null)
             {
-                return NotFound("Product not found.");
+                return NotFound(new ServiceResponse<ProductsDTO>
+                {
+                    Success = false,
+                    Message = "Product not found."
+                });
             }
 
             var response = new ServiceResponse<ProductsDTO>
@@ -64,7 +68,11 @@ namespace OrderingAPI.Controllers
         {
             if (product == null)
             {
-                return BadRequest("Invalid product data.");
+                return BadRequest(new ServiceResponse<AddProductDTO>
+                {
+                    Success = false,
+                    Message = "Invalid product data."
+                });
             }
 
             await _repository.AddProduct(product);
@@ -85,14 +93,22 @@ namespace OrderingAPI.Controllers
         {
             if (product == null)
             {
-                return BadRequest("Invalid product data.");
+                return BadRequest(new ServiceResponse<UpdateProductDTO>
+                {
+                    Success = false,
+                    Message = "Invalid product data."
+                });
             }
 
             bool result = await _repository.UpdateProduct(id, product);
 
             if (!result)
             {
-                return NotFound("Product not found.");
+                return NotFound(new ServiceResponse<UpdateProductDTO>
+                {
+                    Success = false,
+                    Message = "Product not found."
+                });
             }
 
             var response = new ServiceResponse<UpdateProductDTO>

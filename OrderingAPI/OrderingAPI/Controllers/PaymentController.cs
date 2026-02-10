@@ -45,7 +45,11 @@ namespace OrderingAPI.Controllers
 
             if (!success)
             {
-                return NotFound("Order ID not found.");
+                return NotFound(new ServiceResponse<AddPaymentDTO>
+                {
+                    Success = false,
+                    Message = "Order ID not found."
+                });
             }
 
             var response = new ServiceResponse<AddPaymentDTO>

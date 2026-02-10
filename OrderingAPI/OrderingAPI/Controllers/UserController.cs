@@ -46,7 +46,11 @@ namespace OrderingAPI.Controllers
 
             if (result == null)
             {
-                return NotFound("User not found.");
+                return NotFound(new ServiceResponse<UsersDTO>
+                {
+                    Success = false,
+                    Message = "User not found."
+                });
             }
 
             var user = UserToUsersDTO(result);
@@ -85,7 +89,11 @@ namespace OrderingAPI.Controllers
 
             if (user == null)
             {
-                return NotFound("User total spending not found.");
+                return NotFound(new ServiceResponse<UserTotalSpendingDTO>
+                {
+                    Success = false,
+                    Message = "User total spending not found."
+                });
             }
 
             var response = new ServiceResponse<UserTotalSpendingDTO>
@@ -104,7 +112,11 @@ namespace OrderingAPI.Controllers
         {
             if (user == null)
             {
-                return BadRequest("Invalid user data.");
+                return BadRequest(new ServiceResponse<AddUserDTO>
+                {
+                    Success = false,
+                    Message = "Invalid user data."
+                });
             }
 
             await _repository.AddUser(user);
@@ -125,14 +137,22 @@ namespace OrderingAPI.Controllers
         {
             if (user == null)
             {
-                return BadRequest("Invalid user data.");
+                return BadRequest(new ServiceResponse<UpdateUserDTO>
+                {
+                    Success = false,
+                    Message = "Invalid user data."
+                });
             }
 
             bool result = await _repository.UpdateUser(id, user);
 
             if (!result)
             {
-                return NotFound("User not found.");
+                return NotFound(new ServiceResponse<UpdateUserDTO>
+                {
+                    Success = false,
+                    Message = "User not found."
+                });
             }
 
             var response = new ServiceResponse<UpdateUserDTO>

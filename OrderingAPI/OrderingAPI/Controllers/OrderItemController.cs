@@ -44,6 +44,15 @@ namespace OrderingAPI.Controllers
         {
             var result = await _repository.GetOrderItems(id);
 
+            if(result == null)
+            {
+                return NotFound(new ServiceResponse<IEnumerable<OrderItemDTO>>
+                {
+                    Success = false,
+                    Message = "Order not found."
+                });
+            }
+
             var orderItems = result.Select(oi => OrderItemToOrderItemDTO(oi));
 
             var response = new ServiceResponse<IEnumerable<OrderItemDTO>>
@@ -64,7 +73,11 @@ namespace OrderingAPI.Controllers
 
             if (!success)
             {
-                return NotFound("Order ID or Product ID not found.");
+                return NotFound(new ServiceResponse<AddOrderItemDTO>
+                {
+                    Success = false,
+                    Message = "Order ID or Product ID not found."
+                });
             }
 
             var response = new ServiceResponse<AddOrderItemDTO>

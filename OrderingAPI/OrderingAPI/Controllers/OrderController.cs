@@ -45,7 +45,11 @@ namespace OrderingAPI.Controllers
 
             if (order == null)
             {
-                return NotFound("Order not found.");
+                return NotFound(new ServiceResponse<OrdersDTO>
+                {
+                    Success = false,
+                    Message = "Order not found."
+                });
             }
 
             var response = new ServiceResponse<OrdersDTO>
@@ -82,7 +86,11 @@ namespace OrderingAPI.Controllers
 
             if (order == null)
             {
-                return NotFound("Order item details not found.");
+                return NotFound(new ServiceResponse<OrderItemDetailsDTO>
+                {
+                    Success = false,
+                    Message = "Order item details not found."
+                });
             }
 
             var response = new ServiceResponse<OrderItemDetailsDTO>
@@ -119,7 +127,11 @@ namespace OrderingAPI.Controllers
 
             if(order == null)
             {
-                return NotFound("Order with user info not found.");
+                return NotFound(new ServiceResponse<OrdersWithUserInfoDTO>
+                {
+                    Success = false,
+                    Message = "Order with user info not found."
+                });
             }
 
             var response = new ServiceResponse<OrdersWithUserInfoDTO>
@@ -138,14 +150,22 @@ namespace OrderingAPI.Controllers
         {
             if (order == null)
             {
-                return BadRequest("Invalid order input.");
+                return BadRequest(new ServiceResponse<AddOrderDTO>
+                {
+                    Success = false,
+                    Message = "Invalid order input."
+                });
             }
 
             bool success = await _repository.AddOrder(order);
 
             if (!success)
             {
-                return NotFound("Cannot add order, user not found.");
+                return NotFound(new ServiceResponse<AddOrderDTO>
+                {
+                    Success = false,
+                    Message = "Cannot add order, user not found."
+                });
             }
 
             var response = new ServiceResponse<AddOrderDTO>
