@@ -43,7 +43,6 @@ namespace OrderingAPI.MiddleWare
             {
                 Success = false,
                 Message = "An internal error occured.",
-                Data = exception.Message,
                 TraceID = traceID
             };
 
