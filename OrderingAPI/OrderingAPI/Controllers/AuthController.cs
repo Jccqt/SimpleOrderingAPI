@@ -20,33 +20,34 @@ namespace OrderingAPI.Controllers
 
         // POT: api/auth/login
         [HttpPost("login")]
-        public async Task<ActionResult<ServiceResponse<string>>> Login(LoginRequestDTO login)
+        public async Task<ActionResult<ServiceResponse<LoginResponseDTO>>> Login(LoginRequestDTO login)
         {
             if (login == null)
             {
-                return BadRequest(new ServiceResponse<string>
+                return BadRequest(new ServiceResponse<LoginResponseDTO>
                 {
                     Success = false,
                     Message = "User cannot be found"
                 });
             }
 
-            bool result = await _repository.Login(login);
+            var result = await _repository.Login(login);
 
 
-            if (!result)
+            if (!result.Success)
             {
-                return Ok(new ServiceResponse<string>
+                return Ok(new ServiceResponse<LoginResponseDTO>
                 {
                     Success = false,
                     Message = "Email or Password incorrect."
                 });
             }
 
-            return Ok(new ServiceResponse<string>
+            return Ok(new ServiceResponse<LoginResponseDTO>
             {
                 Success = true,
-                Message = "Login Successful!"
+                Message = "Login Successful!",
+                Data = result
             });
         }
     }

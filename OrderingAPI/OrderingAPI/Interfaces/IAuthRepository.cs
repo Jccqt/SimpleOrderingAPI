@@ -5,6 +5,6 @@ namespace OrderingAPI.Interfaces
 {
     public interface IAuthRepository
     {
-        Task<bool> Login(LoginRequestDTO login);
+        Task<LoginResponseDTO> Login(LoginRequestDTO login);
     }
 }

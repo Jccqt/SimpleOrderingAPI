@@ -15,22 +15,31 @@ namespace OrderingAPI.Repositories
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        public async Task<bool> Login(LoginRequestDTO login)
+        public async Task<LoginResponseDTO> Login(LoginRequestDTO login)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            using var cmd = new MySqlCommand("SELECT salt, password FROM users WHERE email = @email && status = 1", conn);
+            using var cmd = new MySqlCommand("SELECT user_id, full_name, role, salt, password FROM users WHERE email = @email && status = 1", conn);
             cmd.Parameters.AddWithValue("@email", login.Email);
 
             using var reader = await cmd.ExecuteReaderAsync();
 
             if(await reader.ReadAsync())
             {
-                return CustomSecurity.HashPassword(login.Password, reader["salt"].ToString()) == reader["password"].ToString();
+                if(CustomSecurity.HashPassword(login.Password, reader["salt"].ToString()) == reader["password"].ToString())
+                {
+                    return new LoginResponseDTO
+                    {
+                        Success = true,
+                        UserID = reader["user_id"].ToString(),
+                        FullName = reader["full_name"].ToString(),
+                        Role = reader["role"].ToString()
+                    };
+                }
             }
 
-            return false;
+            return new LoginResponseDTO { Success = false };
         }
     }
 }

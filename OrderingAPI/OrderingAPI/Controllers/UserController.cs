@@ -172,6 +172,7 @@ namespace OrderingAPI.Controllers
                 FullName = user.full_name,
                 Email = user.email,
                 CreatedAt = user.created_at.ToString("yyyy-MM-dd"),
+                Role = user.role,
                 Status = user.status == 1 ? "Active" : "Inactive"
             };
     }

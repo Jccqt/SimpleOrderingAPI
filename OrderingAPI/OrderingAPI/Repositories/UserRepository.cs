@@ -36,6 +36,7 @@ namespace OrderingAPI.Repositories
                     email = reader["email"].ToString(),
                     password = reader["password"].ToString(),
                     salt = reader["salt"].ToString(),
+                    role = reader["role"].ToString(),
                     created_at = Convert.ToDateTime(reader["created_at"]),
                     status = Convert.ToInt32(reader["status"])
                 };
@@ -65,6 +66,7 @@ namespace OrderingAPI.Repositories
                     email = reader["email"].ToString(),
                     password = reader["password"].ToString(),
                     salt = reader["salt"].ToString(),
+                    role = reader["role"].ToString(),
                     created_at = Convert.ToDateTime(reader["created_at"]),
                     status = Convert.ToInt32(reader["status"])
                 };
