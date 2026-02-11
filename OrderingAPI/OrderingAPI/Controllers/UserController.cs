@@ -124,8 +124,7 @@ namespace OrderingAPI.Controllers
             var response = new ServiceResponse<AddUserDTO>
             {
                 Success = true,
-                Message = "User added successfully!",
-                Data = user
+                Message = "User added successfully!"
             };
 
             return Ok(response);
@@ -158,8 +157,7 @@ namespace OrderingAPI.Controllers
             var response = new ServiceResponse<UpdateUserDTO>
             {
                 Success = true,
-                Message = "User updated successfully!",
-                Data = user
+                Message = "User updated successfully!"
             };
 
             return Ok(response);
@@ -171,7 +169,8 @@ namespace OrderingAPI.Controllers
                 UserID = user.user_id,
                 FullName = user.full_name,
                 Email = user.email,
-                CreatedAt = user.created_at.ToString("yyyy-MM-dd")
+                CreatedAt = user.created_at.ToString("yyyy-MM-dd"),
+                Status = user.status == 1 ? "Active" : "Inactive"
             };
     }
 }

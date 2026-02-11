@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using System.Data;
 using OrderingAPI.DTOs.UserDTOs;
 using OrderingAPI.Interfaces;
+using OrderingAPI.Helpers;
 
 namespace OrderingAPI.Repositories
 {
@@ -33,7 +34,10 @@ namespace OrderingAPI.Repositories
                     user_id = Convert.ToInt32(reader["user_id"]),
                     full_name = reader["full_name"].ToString(),
                     email = reader["email"].ToString(),
-                    created_at = Convert.ToDateTime(reader["created_at"])
+                    password = reader["password"].ToString(),
+                    salt = reader["salt"].ToString(),
+                    created_at = Convert.ToDateTime(reader["created_at"]),
+                    status = Convert.ToInt32(reader["status"])
                 };
 
                 users.Add(user);
@@ -59,7 +63,10 @@ namespace OrderingAPI.Repositories
                     user_id = Convert.ToInt32(reader["user_id"]),
                     full_name = reader["full_name"].ToString(),
                     email = reader["email"].ToString(),
-                    created_at = Convert.ToDateTime(reader["created_at"])
+                    password = reader["password"].ToString(),
+                    salt = reader["salt"].ToString(),
+                    created_at = Convert.ToDateTime(reader["created_at"]),
+                    status = Convert.ToInt32(reader["status"])
                 };
             }
 
@@ -120,10 +127,14 @@ namespace OrderingAPI.Repositories
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
+            var salt = CustomSecurity.GenerateSalt();
+
             using var cmd = new MySqlCommand("AddUser", conn);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@p_full_name", user.FullName);
             cmd.Parameters.AddWithValue("@p_email", user.Email);
+            cmd.Parameters.AddWithValue("@p_password", CustomSecurity.HashPassword(user.Password, salt));
+            cmd.Parameters.AddWithValue("@p_salt", salt);
 
             await cmd.ExecuteNonQueryAsync();
         }
@@ -133,11 +144,22 @@ namespace OrderingAPI.Repositories
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
+            string salt = null;
+
+            if(user.Password != null)
+            {
+                salt = CustomSecurity.GenerateSalt();
+                user.Password = CustomSecurity.HashPassword(user.Password, salt);
+            }
+
             using var cmd = new MySqlCommand("UpdateUser", conn);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@p_user_id", id);
             cmd.Parameters.AddWithValue("@p_full_name", user.FullName);
             cmd.Parameters.AddWithValue("@p_email", user.Email);
+            cmd.Parameters.AddWithValue("@p_password", user.Password);
+            cmd.Parameters.AddWithValue("@p_salt", salt);
+            cmd.Parameters.AddWithValue("@p_status", user.Status);
 
             int rowAffected = await cmd.ExecuteNonQueryAsync();
 
