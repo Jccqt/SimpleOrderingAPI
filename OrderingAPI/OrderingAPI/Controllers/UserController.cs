@@ -124,7 +124,8 @@ namespace OrderingAPI.Controllers
             var response = new ServiceResponse<AddUserDTO>
             {
                 Success = true,
-                Message = "User added successfully!"
+                Message = "User added successfully!",
+                Data = user
             };
 
             return Ok(response);
@@ -157,7 +158,8 @@ namespace OrderingAPI.Controllers
             var response = new ServiceResponse<UpdateUserDTO>
             {
                 Success = true,
-                Message = "User updated successfully!"
+                Message = "User updated successfully!",
+                Data = user
             };
 
             return Ok(response);
