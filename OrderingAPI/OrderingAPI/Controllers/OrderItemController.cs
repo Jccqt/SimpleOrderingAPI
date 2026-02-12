@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderingAPI.DTOs;
 using OrderingAPI.DTOs.OrderItemDTOs;
@@ -11,6 +12,7 @@ namespace OrderingAPI.Controllers
 {
     [Route("api/order-item")]
     [ApiController]
+    [Authorize]
     public class OrderItemController : ControllerBase
     {
         private readonly IOrderItemRepository _repository;
@@ -22,6 +24,7 @@ namespace OrderingAPI.Controllers
 
         // GET: api/order-item
         [HttpGet]
+        [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<OrderItemDTO>>>> GetOrderItems()
         {
             var result = await _repository.GetAllOrderItems();

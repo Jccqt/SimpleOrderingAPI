@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderingAPI.DTOs.PaymentDTOs;
 using OrderingAPI.Interfaces;
@@ -10,6 +11,7 @@ namespace OrderingAPI.Controllers
 {
     [Route("api/payments")]
     [ApiController]
+    [Authorize]
     public class PaymentController : ControllerBase
     {
         private readonly IPaymentRepository _repository;
@@ -21,6 +23,7 @@ namespace OrderingAPI.Controllers
 
         // GET: api/payments
         [HttpGet]
+        [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<PaymentDTO>>>> GetPayments()
         {
             var result = await _repository.GetAllPayments();

@@ -1,15 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderingAPI.DTOs.OrderDTOs;
 using OrderingAPI.Interfaces;
 using OrderingAPI.Models;
 using OrderingAPI.Repositories;
 using System.Data.Common;
+using System.Security.Claims;
 
 namespace OrderingAPI.Controllers
 {
     [Route("api/orders")]
     [ApiController]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly IOrderRepository _repository;
@@ -21,6 +24,7 @@ namespace OrderingAPI.Controllers
 
         // GET: api/orders
         [HttpGet]
+        [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<OrdersDTO>>>> GetOrders()
         {
             var result = await _repository.GetAllOrders();
@@ -41,7 +45,15 @@ namespace OrderingAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ServiceResponse<OrdersDTO>>> GetOrder(int id)
         {
+            int tokenUserID = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            string tokenRole = User.FindFirstValue(ClaimTypes.Role);
+
             var order = await _repository.GetOrder(id);
+
+            if(order.user_id != tokenUserID || tokenRole != "Admin")
+            {
+                return Forbid();
+            }
 
             if (order == null)
             {
@@ -64,6 +76,7 @@ namespace OrderingAPI.Controllers
 
         // GET: api/orders/order-items-details
         [HttpGet("order-item-details")]
+        [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<OrderItemDetailsDTO>>>> GetOrderItemDetails()
         {
             var orders = await _repository.GetAllOrderItemDetails();
@@ -105,6 +118,7 @@ namespace OrderingAPI.Controllers
 
         // GET: api/orders/orders-with-user-info
         [HttpGet("order-with-user-info")]
+        [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<OrdersWithUserInfoDTO>>>> GetOrderWithUserInfo()
         {
             var orders = await _repository.GetAllOrdersWithUserInfo();
@@ -123,7 +137,15 @@ namespace OrderingAPI.Controllers
         [HttpGet("orders-with-user-info/{id}")]
         public async Task<ActionResult<ServiceResponse<OrdersWithUserInfoDTO>>> GetOrderWithUserInfo(int id)
         {
+            int tokenUserID = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            string tokenRole = User.FindFirstValue(ClaimTypes.Role);
+
             var order = await _repository.GetOrderWithUserInfo(id);
+
+            if(order.UserID != tokenUserID || tokenRole != "Admin")
+            {
+                return Forbid();
+            }
 
             if(order == null)
             {

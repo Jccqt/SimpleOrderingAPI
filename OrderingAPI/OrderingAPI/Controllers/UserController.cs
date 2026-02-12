@@ -7,11 +7,13 @@ using OrderingAPI.Models;
 using OrderingAPI.Repositories;
 using System.Data.Common;
 using System.Linq;
+using System.Security.Claims;
 
 namespace OrderingAPI.Controllers
 {
     [Route("api/users")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _repository;
@@ -23,7 +25,7 @@ namespace OrderingAPI.Controllers
 
         // GET: api/users
         [HttpGet]
-        [Authorize]
+        [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<UsersDTO>>>> GetUsers()
         {
             var result = await _repository.GetAllUsers();
@@ -69,6 +71,7 @@ namespace OrderingAPI.Controllers
 
         // GET: api/users/user-total-spending
         [HttpGet("user-total-spending")]
+        [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<UserTotalSpendingDTO>>>> GetUserTotalSpending()
         {
             var users = await _repository.GetAllUserTotalSpending();
@@ -87,6 +90,14 @@ namespace OrderingAPI.Controllers
         [HttpGet("user-total-spending/{id}")]
         public async Task<ActionResult<ServiceResponse<UserTotalSpendingDTO>>> GetUserTotalSpending(int id)
         {
+            int tokenUserID = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            string tokenRole = User.FindFirstValue(ClaimTypes.Role);
+
+            if(tokenUserID != id || tokenRole != "Admin")
+            {
+                return Forbid();
+            }
+
             var user = await _repository.GetUserTotalSpending(id);
 
             if (user == null)
@@ -110,6 +121,7 @@ namespace OrderingAPI.Controllers
 
         // POST: api/users
         [HttpPost]
+        [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<AddUserDTO>>> PostUser(AddUserDTO user)
         {
             if (user == null)
@@ -137,6 +149,14 @@ namespace OrderingAPI.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<ServiceResponse<UpdateUserDTO>>> UpdateUser(int id, UpdateUserDTO user)
         {
+            int tokenUserID = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            string tokenUserRole = User.FindFirstValue(ClaimTypes.Role);
+
+            if(tokenUserRole != "Admin" || id != tokenUserID)
+            {
+                return Forbid();
+            }
+
             if (user == null)
             {
                 return BadRequest(new ServiceResponse<UpdateUserDTO>

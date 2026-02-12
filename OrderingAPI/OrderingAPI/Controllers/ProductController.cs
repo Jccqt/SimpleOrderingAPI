@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderingAPI.DTOs.ProductDTOs;
 using OrderingAPI.Interfaces;
@@ -10,6 +11,7 @@ namespace OrderingAPI.Controllers
 {
     [Route("api/products")]
     [ApiController]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductRepository _repository;
@@ -64,6 +66,7 @@ namespace OrderingAPI.Controllers
 
         // POST: api/products
         [HttpPost]
+        [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<AddProductDTO>>> AddProduct(AddProductDTO product)
         {
             if (product == null)
@@ -89,6 +92,7 @@ namespace OrderingAPI.Controllers
 
         // PUT: api/products?id={}
         [HttpPut("{id}")]
+        [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<UpdateProductDTO>>> UpdateProduct(int id, UpdateProductDTO product)
         {
             if (product == null)
