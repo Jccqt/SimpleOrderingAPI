@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderingAPI.DTOs.UserDTOs;
 using OrderingAPI.Interfaces;
@@ -22,6 +23,7 @@ namespace OrderingAPI.Controllers
 
         // GET: api/users
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<ServiceResponse<IEnumerable<UsersDTO>>>> GetUsers()
         {
             var result = await _repository.GetAllUsers();
