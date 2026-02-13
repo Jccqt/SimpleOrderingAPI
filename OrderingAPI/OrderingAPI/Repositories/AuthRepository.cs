@@ -28,7 +28,7 @@ namespace OrderingAPI.Repositories
             {
                 UserID = userID,
                 Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-                Expires = DateTime.Now.AddMinutes(10)
+                Expires = DateTime.Now.AddMinutes(2)
             };
 
             using var conn = new MySqlConnection(_connectionString);

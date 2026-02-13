@@ -5,6 +5,7 @@ using OrderingAPI.Repositories;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using OrderingAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,6 +67,8 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
+
+builder.Services.AddHostedService<TokenCleanupService>();
 
 var app = builder.Build();
 
