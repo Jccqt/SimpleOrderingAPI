@@ -79,19 +79,36 @@ namespace OrderingAPI.Repositories
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            using var cmd = new MySqlCommand("SELECT * FROM user_sessions WHERE user_id = @userID AND token = @token AND expires > NOW()", conn);
-            cmd.Parameters.AddWithValue("@userID", userID);
-            cmd.Parameters.AddWithValue("@token", request.ExpiredToken);
+            using var cmd = new MySqlCommand("SELECT * FROM user_sessions WHERE token = @token", conn);
+            cmd.Parameters.AddWithValue("@token", request.RefreshToken);
 
             using var reader = await cmd.ExecuteReaderAsync();
 
-            if(await reader.ReadAsync())
+            if(!await reader.ReadAsync())
             {
                 return new LoginResponseDTO
                 {
                     Success = false
                 };
             }
+
+            var dbSessionID = Convert.ToInt32(reader["id"]);
+            var dbUserID = Convert.ToInt32(reader["user_id"]);
+            var dbExpires = Convert.ToDateTime(reader["expires"]);
+
+            await reader.CloseAsync();
+
+            if(dbExpires < DateTime.Now)
+            {
+                await RevokeRefreshTokens(dbUserID);
+
+                return new LoginResponseDTO
+                {
+                    Success = false
+                };
+            }
+
+            await RevokeRefreshTokens(dbUserID);
 
             string newJwtToken = CreateToken(userID, email, userRole);
 
@@ -106,6 +123,17 @@ namespace OrderingAPI.Repositories
                 Role = userRole
             };
 
+        }
+
+        public async Task RevokeRefreshTokens(int userID)
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            using var cmd = new MySqlCommand("DELETE FROM user_sessions WHERE user_id = @userID", conn);
+            cmd.Parameters.AddWithValue("@userID", userID);
+
+            await cmd.ExecuteNonQueryAsync();
         }
 
         private string CreateToken(string userID, string email, string role)
