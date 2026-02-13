@@ -161,6 +161,7 @@ namespace OrderingAPI.Repositories
             cmd.Parameters.AddWithValue("@p_email", user.Email);
             cmd.Parameters.AddWithValue("@p_password", user.Password);
             cmd.Parameters.AddWithValue("@p_salt", salt);
+            cmd.Parameters.AddWithValue("@p_role", user.Role);
             cmd.Parameters.AddWithValue("@p_status", user.Status);
 
             int rowAffected = await cmd.ExecuteNonQueryAsync();

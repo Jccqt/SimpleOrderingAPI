@@ -50,5 +50,27 @@ namespace OrderingAPI.Controllers
                 Data = result
             });
         }
+
+        // POST: api/auth/refresh-token
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<ServiceResponse<LoginResponseDTO>>> RefreshToken(RefreshTokenRequestDTO request)
+        {
+            if (request == null)
+            {
+                return BadRequest(new ServiceResponse<LoginResponseDTO>{
+                    Success = false,
+                    Message = "Invalid Refresh Token Request Data"
+                });
+            }
+
+            var response = await _repository.RefreshToken(request);
+
+            if (!response.Success)
+            {
+                return Unauthorized(response);
+            }
+
+            return Ok(response);
+        }
     }
 }

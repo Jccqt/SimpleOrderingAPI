@@ -1,0 +1,15 @@
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS GenerateRefreshToken$$
+
+CREATE PROCEDURE GenerateRefreshToken(
+	IN p_user_id INT,
+	IN p_token VARCHAR(255),
+	IN p_expires DATETIME)
+	
+BEGIN
+	INSERT INTO user_sessions(user_id, token, expires, created)
+	VALUES(p_user_id, p_token, p_expires, NOW());
+END$$
+
+DELIMITER ;

@@ -152,9 +152,12 @@ namespace OrderingAPI.Controllers
             int tokenUserID = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             string tokenUserRole = User.FindFirstValue(ClaimTypes.Role);
 
-            if(tokenUserRole != "Admin" || id != tokenUserID)
+            if(tokenUserRole != "Admin")
             {
-                return Forbid();
+                if(tokenUserID != id)
+                {
+                    return Forbid();
+                }
             }
 
             if (user == null)

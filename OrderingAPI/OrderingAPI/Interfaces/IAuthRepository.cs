@@ -6,5 +6,6 @@ namespace OrderingAPI.Interfaces
     public interface IAuthRepository
     {
         Task<LoginResponseDTO> Login(LoginRequestDTO login);
+        Task<LoginResponseDTO> RefreshToken(RefreshTokenRequestDTO request);
     }
 }
