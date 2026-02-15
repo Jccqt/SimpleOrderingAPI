@@ -86,19 +86,19 @@ namespace OrderingAPI.Controllers
             return Ok(response);
         }
 
-        // GET: api/users/user-total-spending?id={}
-        [HttpGet("user-total-spending/{id}")]
-        public async Task<ActionResult<ServiceResponse<UserTotalSpendingDTO>>> GetUserTotalSpending(int id)
+        // GET: api/users/user-total-spending?userID={}
+        [HttpGet("user-total-spending/{userID}")]
+        public async Task<ActionResult<ServiceResponse<UserTotalSpendingDTO>>> GetUserTotalSpending(int userID)
         {
             int tokenUserID = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             string tokenRole = User.FindFirstValue(ClaimTypes.Role);
 
-            if(tokenUserID != id || tokenRole != "Admin")
+            if(tokenUserID != userID || tokenRole != "Admin")
             {
                 return Forbid();
             }
 
-            var user = await _repository.GetUserTotalSpending(id);
+            var user = await _repository.GetUserTotalSpending(userID);
 
             if (user == null)
             {
@@ -145,9 +145,9 @@ namespace OrderingAPI.Controllers
             return Ok(response);
         }
 
-        // PUT: api/users?id={}
-        [HttpPut("{id}")]
-        public async Task<ActionResult<ServiceResponse<UpdateUserDTO>>> UpdateUser(int id, UpdateUserDTO user)
+        // PUT: api/users?userID={}
+        [HttpPut("{userID}")]
+        public async Task<ActionResult<ServiceResponse<UpdateUserDTO>>> UpdateUser(int userID, UpdateUserDTO user)
         {
             int tokenUserID = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             string tokenUserRole = User.FindFirstValue(ClaimTypes.Role);
@@ -169,7 +169,7 @@ namespace OrderingAPI.Controllers
                 });
             }
 
-            bool result = await _repository.UpdateUser(id, user);
+            bool result = await _repository.UpdateUser(userID, user);
 
             if (!result)
             {

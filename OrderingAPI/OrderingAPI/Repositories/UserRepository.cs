@@ -101,13 +101,13 @@ namespace OrderingAPI.Repositories
             return users;
         }
 
-        public async Task<UserTotalSpendingDTO> GetUserTotalSpending(int id)
+        public async Task<UserTotalSpendingDTO> GetUserTotalSpending(int userID)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
             using var cmd = new MySqlCommand("SELECT * FROM user_total_spending WHERE `User ID` = @userID", conn);
-            cmd.Parameters.AddWithValue("@userID", id);
+            cmd.Parameters.AddWithValue("@userID", userID);
 
             using var reader = await cmd.ExecuteReaderAsync();
 
@@ -141,7 +141,7 @@ namespace OrderingAPI.Repositories
             await cmd.ExecuteNonQueryAsync();
         }
 
-        public async Task<bool> UpdateUser(int id, UpdateUserDTO user)
+        public async Task<bool> UpdateUser(int userID, UpdateUserDTO user)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -156,7 +156,7 @@ namespace OrderingAPI.Repositories
 
             using var cmd = new MySqlCommand("UpdateUser", conn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@p_user_id", id);
+            cmd.Parameters.AddWithValue("@p_user_id", userID);
             cmd.Parameters.AddWithValue("@p_full_name", user.FullName);
             cmd.Parameters.AddWithValue("@p_email", user.Email);
             cmd.Parameters.AddWithValue("@p_password", user.Password);

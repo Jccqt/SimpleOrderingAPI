@@ -10,6 +10,6 @@ namespace OrderingAPI.Interfaces
         Task<List<UserTotalSpendingDTO>> GetAllUserTotalSpending();
         Task<UserTotalSpendingDTO> GetUserTotalSpending(int userID);
         Task AddUser(AddUserDTO user);
-        Task<bool> UpdateUser(int id, UpdateUserDTO user);
+        Task<bool> UpdateUser(int userID, UpdateUserDTO user);
     }
 }
