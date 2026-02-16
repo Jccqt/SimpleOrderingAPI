@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="OrderingAPI.Shared/OrderingAPI.Shared.csproj" Id="d5150412-0bc2-47ef-97d9-470e1f293433" />
   <Project Path="OrderingAPI/OrderingAPI.csproj" />
+  <Project Path="UserService/UserService.csproj" Id="602f24a0-cc20-4f1c-81ba-456a92883a55" />
 </Solution>
