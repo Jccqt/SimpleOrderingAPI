@@ -42,13 +42,13 @@ namespace OrderingAPI.Repositories
             return orders;
         }
 
-        public async Task<Orders> GetOrder(int id)
+        public async Task<Orders> GetOrder(int orderID)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
             using var cmd = new MySqlCommand("SELECT * FROM orders WHERE order_id = @orderID", conn);
-            cmd.Parameters.AddWithValue("@orderID", id);
+            cmd.Parameters.AddWithValue("@orderID", orderID);
 
             using var reader = await cmd.ExecuteReaderAsync();
 
@@ -94,13 +94,13 @@ namespace OrderingAPI.Repositories
             return orders;
         }
 
-        public async Task<OrderItemDetailsDTO> GetOrderItemDetails(int id)
+        public async Task<OrderItemDetailsDTO> GetOrderItemDetails(int orderID)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
             using var cmd = new MySqlCommand("SELECT * FROM order_items_details WHERE `Order ID` = @orderID", conn);
-            cmd.Parameters.AddWithValue("@orderID", id);
+            cmd.Parameters.AddWithValue("@orderID", orderID);
 
             using var reader = await cmd.ExecuteReaderAsync();
 
@@ -146,13 +146,13 @@ namespace OrderingAPI.Repositories
             return orders;
         }
 
-        public async Task<OrdersWithUserInfoDTO> GetOrderWithUserInfo(int id)
+        public async Task<OrdersWithUserInfoDTO> GetOrderWithUserInfo(int orderID)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
             using var cmd = new MySqlCommand("SELECT * FROM orders_with_user_info WHERE `Order ID` = @orderID", conn);
-            cmd.Parameters.AddWithValue("@orderID", id);
+            cmd.Parameters.AddWithValue("@orderID", orderID);
 
             using var reader = await cmd.ExecuteReaderAsync();
 

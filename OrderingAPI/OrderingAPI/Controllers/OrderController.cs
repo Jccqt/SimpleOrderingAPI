@@ -42,13 +42,13 @@ namespace OrderingAPI.Controllers
         }
 
         // GET: api/orders/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse<OrdersDTO>>> GetOrder(int id)
+        [HttpGet("{orderID}")]
+        public async Task<ActionResult<ServiceResponse<OrdersDTO>>> GetOrder(int orderID)
         {
             int tokenUserID = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             string tokenRole = User.FindFirstValue(ClaimTypes.Role);
 
-            var order = await _repository.GetOrder(id);
+            var order = await _repository.GetOrder(orderID);
 
             if(order.user_id != tokenUserID || tokenRole != "Admin")
             {
@@ -91,11 +91,11 @@ namespace OrderingAPI.Controllers
             return Ok(response);
         }
 
-        // GET: api/orders/order-items-details?id={}
-        [HttpGet("order-item-details/{id}")]
-        public async Task<ActionResult<ServiceResponse<OrderItemDetailsDTO>>> GetOrderItemDetails(int id)
+        // GET: api/orders/order-items-details?orderID={}
+        [HttpGet("order-item-details/{orderID}")]
+        public async Task<ActionResult<ServiceResponse<OrderItemDetailsDTO>>> GetOrderItemDetails(int orderID)
         {
-            var order = await _repository.GetOrderItemDetails(id);
+            var order = await _repository.GetOrderItemDetails(orderID);
 
             if (order == null)
             {
@@ -133,14 +133,14 @@ namespace OrderingAPI.Controllers
             return Ok(response);
         }
 
-        // GET: api/orders/orders-with-user-info?id={}
-        [HttpGet("orders-with-user-info/{id}")]
-        public async Task<ActionResult<ServiceResponse<OrdersWithUserInfoDTO>>> GetOrderWithUserInfo(int id)
+        // GET: api/orders/orders-with-user-info?orderID={}
+        [HttpGet("orders-with-user-info/{orderID}")]
+        public async Task<ActionResult<ServiceResponse<OrdersWithUserInfoDTO>>> GetOrderWithUserInfo(int orderID)
         {
             int tokenUserID = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             string tokenRole = User.FindFirstValue(ClaimTypes.Role);
 
-            var order = await _repository.GetOrderWithUserInfo(id);
+            var order = await _repository.GetOrderWithUserInfo(orderID);
 
             if(order.UserID != tokenUserID || tokenRole != "Admin")
             {
