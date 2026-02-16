@@ -1,4 +1,4 @@
-﻿namespace OrderingAPI.DTOs.UserDTOs
+﻿namespace UserService.DTOs.UserDTOs
 {
     public class AddUserDTO
     {

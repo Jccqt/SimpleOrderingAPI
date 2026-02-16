@@ -1,4 +1,4 @@
-﻿namespace OrderingAPI.Models
+﻿namespace UserService.Models
 {
     public class Users
     {

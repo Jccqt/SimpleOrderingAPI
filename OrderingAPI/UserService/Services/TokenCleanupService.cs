@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;      
 using Microsoft.Extensions.Configuration;
 
-namespace OrderingAPI.Services
+namespace UserService.Services
 {
     public class TokenCleanupService : BackgroundService
     {

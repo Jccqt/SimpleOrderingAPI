@@ -1,11 +1,11 @@
-﻿using OrderingAPI.Models;
+﻿using UserService.Models;
 using MySql.Data.MySqlClient;
 using System.Data;
-using OrderingAPI.DTOs.UserDTOs;
-using OrderingAPI.Interfaces;
-using OrderingAPI.Helpers;
+using UserService.DTOs.UserDTOs;
+using UserService.Interfaces;
+using OrderingAPI.Shared.Helpers;
 
-namespace OrderingAPI.Repositories
+namespace UserService.Repositories
 {
     public class UserRepository : IUserRepository
     {

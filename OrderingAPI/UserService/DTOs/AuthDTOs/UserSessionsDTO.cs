@@ -1,4 +1,4 @@
-﻿namespace OrderingAPI.DTOs.AuthDTOs
+﻿namespace UserService.DTOs.AuthDTOs
 {
     public class UserSessionsDTO
     {

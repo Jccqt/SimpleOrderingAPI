@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
-using OrderingAPI.DTOs.AuthDTOs;
-using OrderingAPI.Interfaces;
-using OrderingAPI.Models;
+using UserService.DTOs.AuthDTOs;
+using UserService.Interfaces;
+using UserService.Models;
+using OrderingAPI.Shared.Models;
 
-namespace OrderingAPI.Controllers
+namespace UserService.Controllers
 {
     [Route("api/auth")]
     [ApiController]

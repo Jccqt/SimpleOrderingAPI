@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.IdentityModel.Tokens;
 using MySql.Data.MySqlClient;
-using OrderingAPI.DTOs.AuthDTOs;
-using OrderingAPI.Helpers;
-using OrderingAPI.Interfaces;
+using UserService.DTOs.AuthDTOs;
+using OrderingAPI.Shared.Helpers;
+using UserService.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Data;
 
-namespace OrderingAPI.Repositories
+namespace UserService.Repositories
 {
     public class AuthRepository : IAuthRepository
     {

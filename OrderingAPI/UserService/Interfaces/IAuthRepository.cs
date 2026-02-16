@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.Data;
-using OrderingAPI.DTOs.AuthDTOs;
+using UserService.DTOs.AuthDTOs;
 
-namespace OrderingAPI.Interfaces
+namespace UserService.Interfaces
 {
     public interface IAuthRepository
     {

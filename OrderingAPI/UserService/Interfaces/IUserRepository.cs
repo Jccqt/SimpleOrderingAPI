@@ -1,7 +1,7 @@
-﻿using OrderingAPI.DTOs.UserDTOs;
-using OrderingAPI.Models;
+﻿using UserService.DTOs.UserDTOs;
+using UserService.Models;
 
-namespace OrderingAPI.Interfaces
+namespace UserService.Interfaces
 {
     public interface IUserRepository
     {

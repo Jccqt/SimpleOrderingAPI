@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OrderingAPI.DTOs.UserDTOs;
-using OrderingAPI.Interfaces;
-using OrderingAPI.Models;
-using OrderingAPI.Repositories;
+using UserService.Interfaces;
+using UserService.Models;
+using UserService.Repositories;
 using System.Data.Common;
 using System.Linq;
 using System.Security.Claims;
+using OrderingAPI.Shared.Models;
+using UserService.DTOs.UserDTOs;
 
-namespace OrderingAPI.Controllers
+namespace UserService.Controllers
 {
     [Route("api/users")]
     [ApiController]
@@ -154,7 +155,7 @@ namespace OrderingAPI.Controllers
 
             if(tokenUserRole != "Admin")
             {
-                if(tokenUserID != id)
+                if(tokenUserID != userID)
                 {
                     return Forbid();
                 }
