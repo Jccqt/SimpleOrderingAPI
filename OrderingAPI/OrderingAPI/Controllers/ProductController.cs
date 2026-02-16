@@ -41,9 +41,9 @@ namespace OrderingAPI.Controllers
 
         // GET: api/products?id={}
         [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse<ProductsDTO>>> GetProduct(int id)
+        public async Task<ActionResult<ServiceResponse<ProductsDTO>>> GetProduct(int productID)
         {
-            var product = await _repository.GetProduct(id);
+            var product = await _repository.GetProduct(productID);
 
             if (product == null)
             {
@@ -93,7 +93,7 @@ namespace OrderingAPI.Controllers
         // PUT: api/products?id={}
         [HttpPut("{id}")]
         [Authorize (Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<UpdateProductDTO>>> UpdateProduct(int id, UpdateProductDTO product)
+        public async Task<ActionResult<ServiceResponse<UpdateProductDTO>>> UpdateProduct(int productID, UpdateProductDTO product)
         {
             if (product == null)
             {
@@ -104,7 +104,7 @@ namespace OrderingAPI.Controllers
                 });
             }
 
-            bool result = await _repository.UpdateProduct(id, product);
+            bool result = await _repository.UpdateProduct(productID, product);
 
             if (!result)
             {

@@ -42,13 +42,13 @@ namespace OrderingAPI.Repositories
             return products;
         }
 
-        public async Task<Products> GetProduct(int id)
+        public async Task<Products> GetProduct(int productID)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
             using var cmd = new MySqlCommand("SELECT * FROM products WHERE product_id = @productID", conn);
-            cmd.Parameters.AddWithValue("@productID", id);
+            cmd.Parameters.AddWithValue("@productID", productID);
             
             using var reader = await cmd.ExecuteReaderAsync();
 
@@ -80,14 +80,14 @@ namespace OrderingAPI.Repositories
             await cmd.ExecuteNonQueryAsync();
         }
 
-        public async Task<bool> UpdateProduct(int id, UpdateProductDTO product)
+        public async Task<bool> UpdateProduct(int productID, UpdateProductDTO product)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
             using var cmd = new MySqlCommand("UpdateProduct", conn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@p_product_id", id);
+            cmd.Parameters.AddWithValue("@p_product_id", productID);
             cmd.Parameters.AddWithValue("@p_product_name", product.ProductName);
             cmd.Parameters.AddWithValue("@p_price", product.Price);
             cmd.Parameters.AddWithValue("@p_stock", product.Stock);
