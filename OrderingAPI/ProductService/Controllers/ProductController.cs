@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OrderingAPI.DTOs.ProductDTOs;
-using OrderingAPI.Interfaces;
-using OrderingAPI.Models;
-using OrderingAPI.Repositories;
+using ProductService.DTOs.ProductDTOs;
+using ProductService.Interfaces;
+using ProductService.Models;
+using ProductService.Repositories;
+using OrderingAPI.Shared.Models;
 using System.Data.Common;
 
 namespace OrderingAPI.Controllers

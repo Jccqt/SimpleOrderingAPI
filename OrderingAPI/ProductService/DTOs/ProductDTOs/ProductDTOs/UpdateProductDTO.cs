@@ -1,4 +1,4 @@
-﻿namespace OrderingAPI.DTOs.ProductDTOs
+﻿namespace ProductService.DTOs.ProductDTOs
 {
     public class UpdateProductDTO
     {

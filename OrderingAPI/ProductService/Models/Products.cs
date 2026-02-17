@@ -1,4 +1,4 @@
-﻿namespace OrderingAPI.Models
+﻿namespace ProductService.Models
 {
     public class Products
     {

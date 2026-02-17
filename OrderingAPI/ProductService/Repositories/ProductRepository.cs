@@ -1,10 +1,10 @@
 ﻿using MySql.Data.MySqlClient;
-using OrderingAPI.DTOs.ProductDTOs;
-using OrderingAPI.Interfaces;
-using OrderingAPI.Models;
+using ProductService.DTOs.ProductDTOs;
+using ProductService.Interfaces;
+using ProductService.Models;
 using System.Data;
 
-namespace OrderingAPI.Repositories
+namespace ProductService.Repositories
 {
     public class ProductRepository : IProductRepository
     {
