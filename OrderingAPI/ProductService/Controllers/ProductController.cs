@@ -8,7 +8,7 @@ using ProductService.Repositories;
 using OrderingAPI.Shared.Models;
 using System.Data.Common;
 
-namespace OrderingAPI.Controllers
+namespace ProductService.Controllers
 {
     [Route("api/products")]
     [ApiController]
