@@ -16,7 +16,7 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddAuthentication(builder.Configuration);
-builder.Services.AddSwaggerGen("User Service API");
+builder.Services.AddSwaggerGen("Product Service API");
 
 var app = builder.Build();
 
@@ -29,9 +29,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
 app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.MapControllers();
 
