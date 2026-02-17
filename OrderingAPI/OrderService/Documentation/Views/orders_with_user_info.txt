@@ -1,0 +1,5 @@
+﻿CREATE VIEW orders_with_user_info AS
+SELECT o.order_id AS 'Order ID', u.user_id AS 'User ID', u.full_name AS 'User Name', u.email AS 'Email'
+FROM orders o
+JOIN
+users u ON o.user_id = u.user_id

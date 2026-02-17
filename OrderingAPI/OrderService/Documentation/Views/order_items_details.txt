@@ -1,0 +1,7 @@
+﻿CREATE VIEW order_items_details AS 
+SELECT o.order_id AS 'Order ID', p.product_id AS 'Product ID', p.product_name AS 'Product Name', o.quantity AS 'Order Quantity', o.amount AS 'Order Amount'
+FROM order_items oi
+JOIN
+orders o ON oi.order_id = o.order_id
+JOIN
+products p ON oi.product_id = p.product_id
