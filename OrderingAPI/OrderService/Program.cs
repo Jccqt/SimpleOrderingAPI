@@ -1,6 +1,7 @@
 using OrderService.Interfaces;
 using OrderService.Repositories;
 using OrderingAPI.Shared.Extensions;
+using OrderingAPI.Shared.MiddleWare;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,8 @@ builder.Services.AddSwaggerGen("Order API Service");
 builder.Services.AddAuthentication(builder.Configuration);
 
 var app = builder.Build();
+
+app.UseMiddleware<GlobalExceptionMiddleWare>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

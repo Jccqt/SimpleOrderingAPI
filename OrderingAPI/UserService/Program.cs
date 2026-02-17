@@ -6,6 +6,7 @@ using UserService.Interfaces;
 using UserService.Repositories;
 using UserService.Services;
 using OrderingAPI.Shared.Extensions;
+using OrderingAPI.Shared.MiddleWare;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +27,7 @@ builder.Services.AddHostedService<TokenCleanupService>();
 
 var app = builder.Build();
 
-app.UseMiddleware<OrderingAPI.Shared.MiddleWare.GlobalExceptionMiddleWare>();
+app.UseMiddleware<GlobalExceptionMiddleWare>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using OrderingAPI.Shared.Extensions;
+using OrderingAPI.Shared.MiddleWare;
 using ProductService.Interfaces;
 using ProductService.Repositories;
 using System.Text;
@@ -19,6 +20,8 @@ builder.Services.AddAuthentication(builder.Configuration);
 builder.Services.AddSwaggerGen("Product Service API");
 
 var app = builder.Build();
+
+app.UseMiddleware<GlobalExceptionMiddleWare>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
