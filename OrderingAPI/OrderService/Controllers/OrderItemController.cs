@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OrderingAPI.DTOs;
-using OrderingAPI.DTOs.OrderItemDTOs;
-using OrderingAPI.Interfaces;
-using OrderingAPI.Models;
-using OrderingAPI.Repositories;
+using OrderService.DTOs;
+using OrderService.Interfaces;
+using OrderingAPI.Shared.Models;
+using OrderService.Repositories;
 using System.Data.Common;
+using OrderService.DTOs.OrderItemDTOs;
+using OrderService.Models;
 
-namespace OrderingAPI.Controllers
+namespace OrderService.Controllers
 {
     [Route("api/order-item")]
     [ApiController]

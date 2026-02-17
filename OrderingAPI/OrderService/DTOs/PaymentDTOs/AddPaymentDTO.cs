@@ -1,4 +1,4 @@
-﻿namespace OrderingAPI.DTOs.PaymentDTOs
+﻿namespace OrderService.DTOs.PaymentDTOs
 {
     public class AddPaymentDTO
     {

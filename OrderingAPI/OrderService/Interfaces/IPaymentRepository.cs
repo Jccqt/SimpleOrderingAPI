@@ -1,7 +1,7 @@
-﻿using OrderingAPI.DTOs.PaymentDTOs;
-using OrderingAPI.Models;
+﻿using OrderService.DTOs.PaymentDTOs;
+using OrderService.Models;
 
-namespace OrderingAPI.Interfaces
+namespace OrderService.Interfaces
 {
     public interface IPaymentRepository
     {

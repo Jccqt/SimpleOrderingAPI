@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OrderingAPI.DTOs.PaymentDTOs;
-using OrderingAPI.Interfaces;
-using OrderingAPI.Models;
-using OrderingAPI.Repositories;
+using OrderService.DTOs.PaymentDTOs;
+using OrderService.Interfaces;
+using OrderingAPI.Shared.Models;
+using OrderService.Repositories;
 using System.Data.Common;
+using OrderService.Models;
 
-namespace OrderingAPI.Controllers
+namespace OrderService.Controllers
 {
     [Route("api/payments")]
     [ApiController]

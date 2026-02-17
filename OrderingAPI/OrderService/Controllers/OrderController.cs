@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OrderingAPI.DTOs.OrderDTOs;
-using OrderingAPI.Interfaces;
-using OrderingAPI.Models;
-using OrderingAPI.Repositories;
+using OrderService.DTOs.OrderDTOs;
+using OrderService.Interfaces;
+using OrderingAPI.Shared.Models;
+using OrderService.Repositories;
 using System.Data.Common;
 using System.Security.Claims;
+using OrderService.Models;
 
-namespace OrderingAPI.Controllers
+namespace OrderService.Controllers
 {
     [Route("api/orders")]
     [ApiController]
@@ -200,7 +201,7 @@ namespace OrderingAPI.Controllers
             return Ok(response);
         }
 
-        private OrdersDTO OrdersToOrdersDTO(Orders order) =>
+        private OrdersDTO OrdersToOrdersDTO(    Orders order) =>
             new OrdersDTO
             {
                 OrderID = order.order_id,

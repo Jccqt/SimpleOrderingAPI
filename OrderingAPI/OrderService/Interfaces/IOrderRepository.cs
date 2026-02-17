@@ -1,7 +1,7 @@
-﻿using OrderingAPI.DTOs.OrderDTOs;
-using OrderingAPI.Models;
+﻿using OrderService.DTOs.OrderDTOs;
+using OrderService.Models;
 
-namespace OrderingAPI.Interfaces
+namespace OrderService.Interfaces
 {
     public interface IOrderRepository
     {
