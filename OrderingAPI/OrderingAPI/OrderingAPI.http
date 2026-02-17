@@ -1,6 +1,0 @@
-@OrderingAPI_HostAddress = http://localhost:5230
-
-GET {{OrderingAPI_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

@@ -1,6 +1,5 @@
 <Solution>
   <Project Path="OrderingAPI.Shared/OrderingAPI.Shared.csproj" Id="d5150412-0bc2-47ef-97d9-470e1f293433" />
-  <Project Path="OrderingAPI/OrderingAPI.csproj" />
   <Project Path="OrderService/OrderService.csproj" Id="72f7781f-2d57-4dcd-9bd4-8412cabcf374" />
   <Project Path="ProductService/ProductService.csproj" Id="cca681e3-439b-44e0-ba1e-2f1c4920fd55" />
   <Project Path="UserService/UserService.csproj" Id="602f24a0-cc20-4f1c-81ba-456a92883a55" />

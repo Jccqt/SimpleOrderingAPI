@@ -1,8 +1,0 @@
-﻿CREATE VIEW user_total_spending AS
-SELECT u.user_id AS 'User ID', u.full_name AS 'Name', SUM(p.amount) AS 'Total Spending'
-FROM payments p
-JOIN
-orders o ON o.order_id = p.order_id
-JOIN
-users u ON u.user_id = o.user_id
-GROUP BY u.user_id

@@ -17,4 +17,9 @@
     <ProjectReference Include="..\OrderingAPI.Shared\OrderingAPI.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Documentation\Triggers\" />
+    <Folder Include="Documentation\Views\" />
+  </ItemGroup>
+
 </Project>
