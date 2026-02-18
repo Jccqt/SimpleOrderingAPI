@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderingAPI.Shared.Models;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace ApiGateway.Controllers
 {
@@ -18,18 +19,9 @@ namespace ApiGateway.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> HandleGet(string path)
+        [AcceptVerbs("GET", "POST", "PUT")]
+        public async Task<IActionResult> HandleRequests(string path)
         {
-            if (string.IsNullOrEmpty(path))
-            {
-                return BadRequest(new ServiceResponse<object>
-                {
-                    Success = false,
-                    Message = "The path field is required"
-                });
-            }
-
             var serviceKey = path.Split('/')[0];
             var route = await _repository.GetRouteByPath(serviceKey);
 
@@ -48,118 +40,50 @@ namespace ApiGateway.Controllers
 
             foreach (var header in Request.Headers)
             {
-                client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value.ToArray());
-            }
-
-            var response = await client.GetAsync(targetUrl);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                return Content(content, "application/json");
-            }
-            else
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                return StatusCode((int)response.StatusCode, errorContent);
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> HandlePost(string path)
-        {
-            var serviceKey = path.Split('/')[0];
-            var route = await _repository.GetRouteByPath(serviceKey);
-
-            if (route == null)
-            {
-                return NotFound(new ServiceResponse<object>
-                {
-                    Success = false,
-                    Message = $"Service {serviceKey} not found."
-                });
-            }
-
-            var targetUrl = $"{route.DestinationUrl}/api/{path}";
-
-            var client = _httpClientFactory.CreateClient();
-
-            foreach (var header in Request.Headers)
-            {
                 if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase)) continue;
-
                 client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value.ToArray());
             }
 
-            HttpContent content = null;
-
-            if(Request.ContentLength > 0)
-            {
-                content = new StreamContent(Request.Body);
-
-                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(Request.ContentType ?? "application/json");
-            }
-
-            var response = await client.PostAsync(targetUrl, content);
-
-            var result = await response.Content.ReadAsStringAsync();
-
-            if (response.IsSuccessStatusCode)
-            {
-                return Content(result, "application/json");
-            }
-            else
-            {
-                return StatusCode((int)response.StatusCode, result);
-            }
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> HandlePut(string path)
-        {
-            var serviceKey = path.Split('/')[0];
-            var route = await _repository.GetRouteByPath(serviceKey);
-
-            if (route == null)
-            {
-                return NotFound(new ServiceResponse<object>
-                {
-                    Success = false,
-                    Message = $"Service {serviceKey} not found."
-                });
-            }
-
-            var targetUrl = $"{route.DestinationUrl}/api/{path}";
-
-            var client = _httpClientFactory.CreateClient();
-
-            foreach (var header in Request.Headers)
-            {
-                if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase)) continue;
-
-                client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value.ToArray());
-            }
-
+            HttpResponseMessage response = null;
             HttpContent content = null;
 
             if (Request.ContentLength > 0)
             {
                 content = new StreamContent(Request.Body);
-
                 content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(Request.ContentType ?? "application/json");
             }
 
-            var response = await client.PutAsync(targetUrl, content);
+            switch (Request.Method.ToUpper())
+            {
+                case "GET":
+                    response = await client.GetAsync(targetUrl);
+                    break;
 
-            var result = await response.Content.ReadAsStringAsync();
+                case "POST":
+                    response = await client.PostAsync(targetUrl, content);
+                    break;
+
+                case "PUT":
+                    response = await client.PutAsync(targetUrl, content);
+                    break;
+
+                default:
+                    return BadRequest(new ServiceResponse<object>
+                    {
+                        Success = false,
+                        Message = $"Method {Request.Method} not supported by Gateway."
+                    });
+            }
+
+            var resultString = await response.Content.ReadAsStringAsync();
 
             if (response.IsSuccessStatusCode)
             {
-                return Content(result, "application/json");
+                return Content(resultString, "application/json");
             }
             else
             {
-                return StatusCode((int)response.StatusCode, result);
+                return StatusCode((int)response.StatusCode, resultString);
             }
         }
         
