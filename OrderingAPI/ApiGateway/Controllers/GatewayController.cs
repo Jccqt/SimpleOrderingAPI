@@ -65,6 +65,54 @@ namespace ApiGateway.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> HandlePost(string path)
+        {
+            var serviceKey = path.Split('/')[0];
+            var route = await _repository.GetRouteByPath(serviceKey);
+
+            if (route == null)
+            {
+                return NotFound(new ServiceResponse<object>
+                {
+                    Success = false,
+                    Message = $"Service {serviceKey} not found."
+                });
+            }
+
+            var targetUrl = $"{route.DestinationUrl}/api/{path}";
+
+            var client = _httpClientFactory.CreateClient();
+
+            foreach (var header in Request.Headers)
+            {
+                if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase)) continue;
+
+                client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value.ToArray());
+            }
+
+            HttpContent content = null;
+
+            if(Request.ContentLength > 0)
+            {
+                content = new StreamContent(Request.Body);
+
+                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(Request.ContentType ?? "application/json");
+            }
+
+            var response = await client.PostAsync(targetUrl, content);
+
+            var result = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                return Content(result, "application/json");
+            }
+            else
+            {
+                return StatusCode((int)response.StatusCode, result);
+            }
+        }
        
     }
 }
