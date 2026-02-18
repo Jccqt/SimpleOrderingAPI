@@ -28,7 +28,7 @@ namespace UserService.Repositories
             {
                 UserID = userID,
                 Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-                Expires = DateTime.Now.AddMinutes(2)
+                Expires = DateTime.Now.AddMinutes(20)
             };
 
             using var conn = new MySqlConnection(_connectionString);
@@ -153,7 +153,7 @@ namespace UserService.Repositories
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddMinutes(1),
+                Expires = DateTime.Now.AddMinutes(10),
                 SigningCredentials = creds
             };
 
