@@ -92,7 +92,7 @@ namespace ProductService.Controllers
         }
 
         // PUT: api/products?id={}
-        [HttpPut("{id}")]
+        [HttpPut("{productID}")]
         [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<UpdateProductDTO>>> UpdateProduct(int productID, UpdateProductDTO product)
         {
