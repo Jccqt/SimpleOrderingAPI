@@ -5,6 +5,7 @@ using UserService.DTOs.AuthDTOs;
 using UserService.Interfaces;
 using UserService.Models;
 using OrderingAPI.Shared.Models;
+using Google.Apis.Auth;
 
 namespace UserService.Controllers
 {
@@ -49,6 +50,42 @@ namespace UserService.Controllers
                 Success = true,
                 Message = "Login Successful!",
                 Data = result
+            });
+        }
+
+        // POST: api/auth/google-login
+        [HttpPost("google-login")]
+        public async Task<ActionResult<ServiceResponse<LoginResponseDTO>>> GoogleLogin(GoogleLoginDTO request)
+        {
+            var settings = new GoogleJsonWebSignature.ValidationSettings()
+            {
+                Audience = new List<string> { "551755919815-u03hnh1p0hj7pn74ledieuib142p1obi.apps.googleusercontent.com" }
+            };
+
+            var payload = await GoogleJsonWebSignature.ValidateAsync(request.IdToken, settings);
+
+            var email = payload.Email;
+            var name = payload.Name;
+
+            var user = await _repository.FindByEmail(email);
+
+            var token = _repository.CreateToken(user.UserID, user.Email, user.Role);
+
+            var refreshToken = await _repository.GenerateRefreshToken(Convert.ToInt32(user.UserID));
+
+            return Ok(new ServiceResponse<LoginResponseDTO>
+            {
+                Success = true,
+                Message = "Google Login Successful",
+                Data = new LoginResponseDTO
+                {
+                    Success = true,
+                    UserID = Convert.ToInt32(user.UserID),
+                    FullName = user.FullName,
+                    Role = user.Role,
+                    Token = token,
+                    RefreshToken = refreshToken.Token
+                }
             });
         }
 

@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Data;
+using UserService.DTOs.UserDTOs;
 
 namespace UserService.Repositories
 {
@@ -22,7 +23,7 @@ namespace UserService.Repositories
             _configuration = configuration;
         }
 
-        private async Task<UserSessionsDTO> GenerateRefreshToken(int userID)
+        public async Task<UserSessionsDTO> GenerateRefreshToken(int userID)
         {
             var refreshToken = new UserSessionsDTO
             {
@@ -110,7 +111,7 @@ namespace UserService.Repositories
 
             await RevokeRefreshTokens(dbUserID);
 
-            string newJwtToken = CreateToken(userID, email, userRole);
+            string newJwtToken = CreateToken(dbUserID, email, userRole);
 
             var newRefreshToken = await GenerateRefreshToken(int.Parse(userID));
 
@@ -136,11 +137,11 @@ namespace UserService.Repositories
             await cmd.ExecuteNonQueryAsync();
         }
 
-        private string CreateToken(string userID, string email, string role)
+        public string CreateToken(int userID, string email, string role)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, userID),
+                new Claim(ClaimTypes.NameIdentifier, userID.ToString()),
                 new Claim(ClaimTypes.Email, email),
                 new Claim(ClaimTypes.Role, role)
             };
@@ -178,7 +179,7 @@ namespace UserService.Repositories
                 if(CustomSecurity.HashPassword(login.Password, reader["salt"].ToString()) == reader["password"].ToString())
                 {
                     string token = CreateToken(
-                        reader["user_id"].ToString(),
+                        Convert.ToInt32(reader["user_id"]),
                         reader["email"].ToString(),
                         reader["role"].ToString());
 
@@ -197,6 +198,30 @@ namespace UserService.Repositories
             }
 
             return new LoginResponseDTO { Success = false };
+        }
+
+        public async Task<UserLoginDTO> FindByEmail(string email)
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            using var cmd = new MySqlCommand("SELECT * FROM users WHERE email = @email", conn);
+            cmd.Parameters.AddWithValue("@email", email);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                return new UserLoginDTO
+                {
+                    UserID = Convert.ToInt32(reader["user_id"]),
+                    FullName = reader["full_name"].ToString(),
+                    Email = reader["email"].ToString(),
+                    Role = reader["role"].ToString()
+                };
+            }
+
+            return null;
         }
     }
 }
