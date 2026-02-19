@@ -6,6 +6,7 @@ using UserService.Interfaces;
 using UserService.Models;
 using OrderingAPI.Shared.Models;
 using Google.Apis.Auth;
+using UserService.DTOs.UserDTOs;
 
 namespace UserService.Controllers
 {
@@ -13,11 +14,13 @@ namespace UserService.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthRepository _repository;
+        private readonly IAuthRepository authRepository;
+        private readonly IUserRepository userRepository;
 
-        public AuthController(IAuthRepository repository)
+        public AuthController(IAuthRepository repository, IUserRepository userRepository)
         {
-            _repository = repository; 
+            authRepository = repository;
+            this.userRepository = userRepository;
         }
 
         // POT: api/auth/login
@@ -33,7 +36,7 @@ namespace UserService.Controllers
                 });
             }
 
-            var result = await _repository.Login(login);
+            var result = await authRepository.Login(login);
 
 
             if (!result.Success)
@@ -67,11 +70,24 @@ namespace UserService.Controllers
             var email = payload.Email;
             var name = payload.Name;
 
-            var user = await _repository.FindByEmail(email);
+            var user = await userRepository.FindByEmail(email);
 
-            var token = _repository.CreateToken(user.UserID, user.Email, user.Role);
+            if(user == null)
+            {
+                var googleUser = new AddGoogleUserDTO
+                {
+                    Email = email,
+                    FullName = name
+                };
 
-            var refreshToken = await _repository.GenerateRefreshToken(Convert.ToInt32(user.UserID));
+                await userRepository.AddGoogleUser(googleUser);
+
+                user = await userRepository.FindByEmail(email);
+            }
+
+            var token = authRepository.CreateToken(user.UserID, user.Email, user.Role);
+
+            var refreshToken = await authRepository.GenerateRefreshToken(Convert.ToInt32(user.UserID));
 
             return Ok(new ServiceResponse<LoginResponseDTO>
             {
@@ -101,7 +117,7 @@ namespace UserService.Controllers
                 });
             }
 
-            var response = await _repository.RefreshToken(request);
+            var response = await authRepository.RefreshToken(request);
 
             if (!response.Success)
             {

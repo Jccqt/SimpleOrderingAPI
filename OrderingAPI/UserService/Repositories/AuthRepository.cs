@@ -199,29 +199,5 @@ namespace UserService.Repositories
 
             return new LoginResponseDTO { Success = false };
         }
-
-        public async Task<UserLoginDTO> FindByEmail(string email)
-        {
-            using var conn = new MySqlConnection(_connectionString);
-            await conn.OpenAsync();
-
-            using var cmd = new MySqlCommand("SELECT * FROM users WHERE email = @email", conn);
-            cmd.Parameters.AddWithValue("@email", email);
-
-            using var reader = await cmd.ExecuteReaderAsync();
-
-            if (await reader.ReadAsync())
-            {
-                return new UserLoginDTO
-                {
-                    UserID = Convert.ToInt32(reader["user_id"]),
-                    FullName = reader["full_name"].ToString(),
-                    Email = reader["email"].ToString(),
-                    Role = reader["role"].ToString()
-                };
-            }
-
-            return null;
-        }
     }
 }

@@ -137,6 +137,27 @@ namespace UserService.Repositories
             cmd.Parameters.AddWithValue("@p_email", user.Email);
             cmd.Parameters.AddWithValue("@p_password", CustomSecurity.HashPassword(user.Password, salt));
             cmd.Parameters.AddWithValue("@p_salt", salt);
+            cmd.Parameters.AddWithValue("@p_role", user.Role);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        public async Task AddGoogleUser(AddGoogleUserDTO googleUser)
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            string dummySalt = CustomSecurity.GenerateSalt();
+            string dummyPassword = Guid.NewGuid().ToString();
+            string hashedDummyPassword = CustomSecurity.HashPassword(dummyPassword, dummySalt);
+
+            using var cmd = new MySqlCommand("AddUser", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@p_full_name", googleUser.FullName);
+            cmd.Parameters.AddWithValue("@p_email", googleUser.Email);
+            cmd.Parameters.AddWithValue("@p_password", hashedDummyPassword);
+            cmd.Parameters.AddWithValue("@p_salt", dummySalt);
+            cmd.Parameters.AddWithValue("@p_role", "Customer");
 
             await cmd.ExecuteNonQueryAsync();
         }
@@ -167,6 +188,30 @@ namespace UserService.Repositories
             int rowAffected = await cmd.ExecuteNonQueryAsync();
 
             return rowAffected > 0;
+        }
+
+        public async Task<UserLoginDTO> FindByEmail(string email)
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            using var cmd = new MySqlCommand("SELECT * FROM users WHERE email = @email", conn);
+            cmd.Parameters.AddWithValue("@email", email);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                return new UserLoginDTO
+                {
+                    UserID = Convert.ToInt32(reader["user_id"]),
+                    FullName = reader["full_name"].ToString(),
+                    Email = reader["email"].ToString(),
+                    Role = reader["role"].ToString()
+                };
+            }
+
+            return null;
         }
     }
 }
