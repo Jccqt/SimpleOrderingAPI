@@ -1,6 +1,9 @@
 using ApiGateway.Interfaces;
 using ApiGateway.Repositories;
+using OrderingAPI.Shared.Interfaces;
 using OrderingAPI.Shared.MiddleWare;
+using OrderingAPI.Shared.Repositories;
+using OrderingAPI.Shared.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +13,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpClient();
 
+builder.Services.AddScoped<IErrorLogRepository, ErrorLogRepository>();
 builder.Services.AddScoped<IGatewayRepository, GatewayRepository>();
+builder.Services.AddSingleton<AESCryptService>();
 
 var app = builder.Build();
 

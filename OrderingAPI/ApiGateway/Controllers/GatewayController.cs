@@ -1,7 +1,9 @@
-﻿using ApiGateway.Interfaces;
+﻿using ApiGateway.DTOs;
+using ApiGateway.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderingAPI.Shared.Models;
+using OrderingAPI.Shared.Security;
 using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace ApiGateway.Controllers
@@ -12,11 +14,13 @@ namespace ApiGateway.Controllers
     {
         private readonly IGatewayRepository _repository;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly AESCryptService _crypService;
 
-        public GatewayController(IGatewayRepository repository, IHttpClientFactory httpClientFactory)
+        public GatewayController(IGatewayRepository repository, IHttpClientFactory httpClientFactory, AESCryptService crypService)
         {
             _repository = repository;
             _httpClientFactory = httpClientFactory;
+            _crypService = crypService;
         }
 
         [AcceptVerbs("GET", "POST", "PUT")]
@@ -25,7 +29,7 @@ namespace ApiGateway.Controllers
             var serviceKey = path.Split('/')[0];
             var route = await _repository.GetRouteByPath(serviceKey);
 
-            if(route == null)
+            if (route == null)
             {
                 return NotFound(new ServiceResponse<object>
                 {
@@ -40,7 +44,10 @@ namespace ApiGateway.Controllers
 
             foreach (var header in Request.Headers)
             {
-                if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase)) continue;
+                if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
                 client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value.ToArray());
             }
 
@@ -49,9 +56,30 @@ namespace ApiGateway.Controllers
 
             if (Request.ContentLength > 0)
             {
-                content = new StreamContent(Request.Body);
-                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(Request.ContentType ?? "application/json");
+                using var reader = new StreamReader(Request.Body);
+                var bodyText = await reader.ReadToEndAsync();
+
+                var payloadDTO = System.Text.Json.JsonSerializer.Deserialize<PayloadDTO>(bodyText,
+                        new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                if (string.IsNullOrEmpty(payloadDTO?.Data))
+                {
+                    return BadRequest(new ServiceResponse<object>
+                    {
+                        Success = false,
+                        Message = "Data cannot be empty",
+                        Data = null
+                    });
+                }
+
+                var rawDecryptedString = _crypService.Decrypt(payloadDTO.Data);
+
+                var cleanJsonString = rawDecryptedString.Replace("\0", string.Empty).Trim();
+
+                content = new StringContent(cleanJsonString, System.Text.Encoding.UTF8, "application/json");
             }
+
+
 
             switch (Request.Method.ToUpper())
             {
@@ -77,9 +105,15 @@ namespace ApiGateway.Controllers
 
             var resultString = await response.Content.ReadAsStringAsync();
 
+            var encryptedResponseString = _crypService.Encrypt(resultString);
+
             if (response.IsSuccessStatusCode)
             {
-                return Content(resultString, "application/json");
+                return Ok(new ServiceResponse<object>
+                {
+                    Success = true,
+                    Data = encryptedResponseString
+                });
             }
             else
             {

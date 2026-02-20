@@ -23,7 +23,7 @@ namespace UserService.Controllers
             this.userRepository = userRepository;
         }
 
-        // POT: api/auth/login
+        // POST: api/auth/login
         [HttpPost("login")]
         public async Task<ActionResult<ServiceResponse<LoginResponseDTO>>> Login(LoginRequestDTO login)
         {
