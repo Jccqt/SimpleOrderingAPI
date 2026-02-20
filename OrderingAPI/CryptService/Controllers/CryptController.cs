@@ -18,19 +18,11 @@ namespace CryptService.Controllers
         }
 
         [HttpPost("encrypt")]
-        public ActionResult<ServiceResponse<object>> Encrypt(PayloadDTO request)
+        public ActionResult<ServiceResponse<object>> Encrypt(object rawJson)
         {
-            if (string.IsNullOrEmpty(request.Data))
-            {
-                return BadRequest(new ServiceResponse<object>
-                {
-                    Success = false,
-                    Message = "Data cannot be empty",
-                    Data = null
-                });
-            }
+            var jsonString = System.Text.Json.JsonSerializer.Serialize(rawJson);
 
-            var encryptedString = _cryptService.Encrypt(request.Data);
+            var encryptedString = _cryptService.Encrypt(jsonString);
 
             return Ok(new ServiceResponse<object>
             {
@@ -54,6 +46,29 @@ namespace CryptService.Controllers
             }
 
             var decryptedString = _cryptService.Decrypt(request.Data);
+
+            return Ok(new ServiceResponse<object>
+            {
+                Success = true,
+                Message = "Decrypted successfully!",
+                Data = decryptedString
+            });
+        }
+
+        [HttpPost("decrypt-object")]
+        public ActionResult<ServiceResponse<object>> DecryptObject(PayloadDTO request)
+        {
+            if (string.IsNullOrEmpty(request.Data))
+            {
+                return BadRequest(new ServiceResponse<object>
+                {
+                    Success = false,
+                    Message = "Data cannot be empty",
+                    Data = null
+                });
+            }
+
+            var decryptedString = _cryptService.DecryptObject<object>(request.Data);
 
             return Ok(new ServiceResponse<object>
             {

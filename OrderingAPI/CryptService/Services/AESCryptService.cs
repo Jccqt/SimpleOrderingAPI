@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 
 namespace CryptService.Services
 {
@@ -59,6 +60,18 @@ namespace CryptService.Services
             using var srDecrypt = new StreamReader(csDecrypt);
 
             return srDecrypt.ReadToEnd();
+        }
+
+        public T DecryptObject<T>(string cipherText)
+        {
+            var rawJsonString = Decrypt(cipherText);
+
+            var cleanJson = rawJsonString.Replace("\0", string.Empty).Trim();
+
+            return JsonSerializer.Deserialize<T>(cleanJson, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
         }
     }
 }
