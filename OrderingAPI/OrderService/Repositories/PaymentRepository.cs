@@ -1,5 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
-using OrderService.DTOs.PaymentDTOs;
+using OrderService.DTOs.V1.PaymentDTOs;
 using OrderService.Interfaces;
 using OrderService.Models;
 using System.Data;

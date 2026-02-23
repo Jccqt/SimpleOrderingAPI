@@ -1,17 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OrderService.DTOs.OrderDTOs;
 using OrderService.Interfaces;
 using OrderingAPI.Shared.Models;
 using OrderService.Repositories;
 using System.Data.Common;
 using System.Security.Claims;
 using OrderService.Models;
+using OrderService.DTOs.V1.OrderDTOs;
+using Asp.Versioning;
 
-namespace OrderService.Controllers
+namespace OrderService.Controllers.V1
 {
-    [Route("api/orders")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/orders")]
     [ApiController]
     [Authorize]
     public class OrderController : ControllerBase
@@ -23,7 +25,7 @@ namespace OrderService.Controllers
             _repository = repository;
         }
 
-        // GET: api/orders
+        // GET: api/v1/orders
         [HttpGet]
         [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<OrdersDTO>>>> GetOrders()
@@ -42,7 +44,7 @@ namespace OrderService.Controllers
             return Ok(response);
         }
 
-        // GET: api/orders/5
+        // GET: api/v1/orders/5
         [HttpGet("{orderID}")]
         public async Task<ActionResult<ServiceResponse<OrdersDTO>>> GetOrder(int orderID)
         {
@@ -75,7 +77,7 @@ namespace OrderService.Controllers
             return Ok(response);
         }
 
-        // GET: api/orders/order-items-details
+        // GET: api/v1/orders/order-items-details
         [HttpGet("order-item-details")]
         [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<OrderItemDetailsDTO>>>> GetOrderItemDetails()
@@ -92,7 +94,7 @@ namespace OrderService.Controllers
             return Ok(response);
         }
 
-        // GET: api/orders/order-items-details?orderID={}
+        // GET: api/v1/orders/order-items-details?orderID={}
         [HttpGet("order-item-details/{orderID}")]
         public async Task<ActionResult<ServiceResponse<OrderItemDetailsDTO>>> GetOrderItemDetails(int orderID)
         {
@@ -117,7 +119,7 @@ namespace OrderService.Controllers
             return Ok(response);
         }
 
-        // GET: api/orders/orders-with-user-info
+        // GET: api/v1/orders/orders-with-user-info
         [HttpGet("order-with-user-info")]
         [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<OrdersWithUserInfoDTO>>>> GetOrderWithUserInfo()
@@ -134,7 +136,7 @@ namespace OrderService.Controllers
             return Ok(response);
         }
 
-        // GET: api/orders/orders-with-user-info?orderID={}
+        // GET: api/v1/orders/orders-with-user-info?orderID={}
         [HttpGet("orders-with-user-info/{orderID}")]
         public async Task<ActionResult<ServiceResponse<OrdersWithUserInfoDTO>>> GetOrderWithUserInfo(int orderID)
         {
@@ -167,7 +169,7 @@ namespace OrderService.Controllers
             return Ok(response);
         }
  
-        // POST: api/orders
+        // POST: api/v1/orders
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<AddOrderDTO>>> AddOrder(AddOrderDTO order)
         {

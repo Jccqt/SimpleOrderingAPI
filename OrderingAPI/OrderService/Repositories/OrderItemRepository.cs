@@ -1,5 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
-using OrderService.DTOs.OrderItemDTOs;
+using OrderService.DTOs.V1.OrderItemDTOs;
 using OrderService.Interfaces;
 using OrderService.Models;
 using System.Data;

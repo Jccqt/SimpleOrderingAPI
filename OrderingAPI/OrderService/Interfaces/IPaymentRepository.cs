@@ -1,4 +1,4 @@
-﻿using OrderService.DTOs.PaymentDTOs;
+﻿using OrderService.DTOs.V1.PaymentDTOs;
 using OrderService.Models;
 
 namespace OrderService.Interfaces

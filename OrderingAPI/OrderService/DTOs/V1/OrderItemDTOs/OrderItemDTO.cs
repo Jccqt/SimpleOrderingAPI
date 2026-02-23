@@ -1,4 +1,4 @@
-﻿namespace OrderService.DTOs.OrderItemDTOs
+﻿namespace OrderService.DTOs.V1.OrderItemDTOs
 {
     public class OrderItemDTO
     {

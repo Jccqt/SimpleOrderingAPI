@@ -1,7 +1,8 @@
-using OrderService.Interfaces;
-using OrderService.Repositories;
+using Asp.Versioning;
 using OrderingAPI.Shared.Extensions;
 using OrderingAPI.Shared.MiddleWare;
+using OrderService.Interfaces;
+using OrderService.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,15 @@ builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen("Order API Service");
 builder.Services.AddAuthentication(builder.Configuration);
+
+builder.Services.AddApiVersioning(options =>
+{
+    options.AssumeDefaultVersionWhenUnspecified = true;
+
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+
+    options.ReportApiVersions = true;
+});
 
 var app = builder.Build();
 

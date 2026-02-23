@@ -6,12 +6,14 @@ using OrderService.Interfaces;
 using OrderingAPI.Shared.Models;
 using OrderService.Repositories;
 using System.Data.Common;
-using OrderService.DTOs.OrderItemDTOs;
 using OrderService.Models;
+using OrderService.DTOs.V1.OrderItemDTOs;
+using Asp.Versioning;
 
-namespace OrderService.Controllers
+namespace OrderService.Controllers.V1
 {
-    [Route("api/order-item")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/order-item")]
     [ApiController]
     [Authorize]
     public class OrderItemController : ControllerBase
@@ -23,7 +25,7 @@ namespace OrderService.Controllers
             _repository = repository;
         }
 
-        // GET: api/order-item
+        // GET: api/v1/order-item
         [HttpGet]
         [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<OrderItemDTO>>>> GetOrderItems()
@@ -42,7 +44,7 @@ namespace OrderService.Controllers
             return Ok(response);
         }
 
-        // GET: api/order-item/5
+        // GET: api/v1/order-item/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<OrderItemDTO>>>> GetOrderItems(int id)
         {
@@ -69,7 +71,7 @@ namespace OrderService.Controllers
             return Ok(response);
         }
 
-        // POST: api/order-item
+        // POST: api/v1/order-item
         [HttpPost]
         public async Task<ActionResult<AddOrderItemDTO>> AddOrderItem(AddOrderItemDTO orderItem)
         {

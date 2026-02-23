@@ -1,16 +1,18 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OrderService.DTOs.PaymentDTOs;
 using OrderService.Interfaces;
 using OrderingAPI.Shared.Models;
 using OrderService.Repositories;
 using System.Data.Common;
 using OrderService.Models;
+using OrderService.DTOs.V1.PaymentDTOs;
+using Asp.Versioning;
 
-namespace OrderService.Controllers
+namespace OrderService.Controllers.V1
 {
-    [Route("api/payments")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/payments")]
     [ApiController]
     [Authorize]
     public class PaymentController : ControllerBase
@@ -22,7 +24,7 @@ namespace OrderService.Controllers
             _repository = repository;
         }
 
-        // GET: api/payments
+        // GET: api/v1/payments
         [HttpGet]
         [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<PaymentDTO>>>> GetPayments()
@@ -41,7 +43,7 @@ namespace OrderService.Controllers
             return Ok(response);
         }
 
-        // POST: api/payments
+        // POST: api/v1/payments
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<AddPaymentDTO>>> AddPayment(AddPaymentDTO payment)
         {
