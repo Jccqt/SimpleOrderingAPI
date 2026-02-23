@@ -1,16 +1,18 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ProductService.DTOs.ProductDTOs;
 using ProductService.Interfaces;
 using ProductService.Models;
 using ProductService.Repositories;
 using OrderingAPI.Shared.Models;
 using System.Data.Common;
+using ProductService.DTOs.V1.ProductDTOs.ProductDTOs;
+using Asp.Versioning;
 
-namespace ProductService.Controllers
+namespace ProductService.Controllers.V1
 {
-    [Route("api/products")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/products")]
     [ApiController]
     [Authorize]
     public class ProductController : ControllerBase
@@ -22,7 +24,7 @@ namespace ProductService.Controllers
             _repository = repository;
         }
 
-        // GET: api/products
+        // GET: api/v1/products
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<IEnumerable<ProductsDTO>>>> GetProducts()
         {
@@ -40,7 +42,7 @@ namespace ProductService.Controllers
             return Ok(products);
         }
 
-        // GET: api/products?id={}
+        // GET: api/v1/products?id={}
         [HttpGet("{id}")]
         public async Task<ActionResult<ServiceResponse<ProductsDTO>>> GetProduct(int productID)
         {
@@ -65,7 +67,7 @@ namespace ProductService.Controllers
             return Ok(response);
         }
 
-        // POST: api/products
+        // POST: api/v1/products
         [HttpPost]
         [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<AddProductDTO>>> AddProduct(AddProductDTO product)
@@ -91,7 +93,7 @@ namespace ProductService.Controllers
             return Ok(response);
         }
 
-        // PUT: api/products?id={}
+        // PUT: api/v1/products?id={}
         [HttpPut("{productID}")]
         [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<UpdateProductDTO>>> UpdateProduct(int productID, UpdateProductDTO product)

@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -18,6 +19,15 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddAuthentication(builder.Configuration);
 builder.Services.AddSwaggerGen("Product Service API");
+
+builder.Services.AddApiVersioning(options =>
+{
+    options.AssumeDefaultVersionWhenUnspecified = true;
+
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+
+    options.ReportApiVersions = true;
+});
 
 var app = builder.Build();
 

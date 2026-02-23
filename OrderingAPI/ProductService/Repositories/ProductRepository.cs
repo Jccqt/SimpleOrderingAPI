@@ -1,5 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
-using ProductService.DTOs.ProductDTOs;
+using ProductService.DTOs.V1.ProductDTOs.ProductDTOs;
 using ProductService.Interfaces;
 using ProductService.Models;
 using System.Data;

@@ -1,4 +1,4 @@
-﻿using ProductService.DTOs.ProductDTOs;
+﻿using ProductService.DTOs.V1.ProductDTOs.ProductDTOs;
 using ProductService.Models;
 
 namespace ProductService.Interfaces

@@ -1,4 +1,4 @@
-﻿namespace ProductService.DTOs.ProductDTOs
+﻿namespace ProductService.DTOs.V1.ProductDTOs.ProductDTOs
 {
     public class UpdateProductDTO
     {
