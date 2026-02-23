@@ -1,4 +1,4 @@
-﻿using UserService.DTOs.UserDTOs;
+﻿using UserService.DTOs.V1.UserDTOs;
 using UserService.Models;
 
 namespace UserService.Interfaces

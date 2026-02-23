@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.Data;
-using UserService.DTOs.AuthDTOs;
+using UserService.DTOs.V1.AuthDTOs;
 
 namespace UserService.Interfaces
 {

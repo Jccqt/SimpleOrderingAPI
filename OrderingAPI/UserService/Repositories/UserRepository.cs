@@ -1,9 +1,9 @@
 ﻿using UserService.Models;
 using MySql.Data.MySqlClient;
 using System.Data;
-using UserService.DTOs.UserDTOs;
 using UserService.Interfaces;
 using OrderingAPI.Shared.Helpers;
+using UserService.DTOs.V1.UserDTOs;
 
 namespace UserService.Repositories
 {

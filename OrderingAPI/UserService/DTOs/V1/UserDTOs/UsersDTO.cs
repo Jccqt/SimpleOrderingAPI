@@ -1,4 +1,4 @@
-﻿namespace UserService.DTOs.UserDTOs
+﻿namespace UserService.DTOs.V1.UserDTOs
 {
     public class UsersDTO
     {

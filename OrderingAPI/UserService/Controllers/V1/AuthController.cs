@@ -1,16 +1,18 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
-using UserService.DTOs.AuthDTOs;
 using UserService.Interfaces;
 using UserService.Models;
 using OrderingAPI.Shared.Models;
 using Google.Apis.Auth;
-using UserService.DTOs.UserDTOs;
+using UserService.DTOs.V1.UserDTOs;
+using UserService.DTOs.V1.AuthDTOs;
+using Asp.Versioning;
 
-namespace UserService.Controllers
+namespace UserService.Controllers.V1
 {
-    [Route("api/auth")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {

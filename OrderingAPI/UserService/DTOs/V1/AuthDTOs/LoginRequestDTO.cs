@@ -1,4 +1,4 @@
-﻿namespace UserService.DTOs.AuthDTOs
+﻿namespace UserService.DTOs.V1.AuthDTOs
 {
     public class LoginRequestDTO
     {

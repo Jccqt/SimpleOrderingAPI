@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.IdentityModel.Tokens;
 using MySql.Data.MySqlClient;
-using UserService.DTOs.AuthDTOs;
 using OrderingAPI.Shared.Helpers;
 using UserService.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Data;
-using UserService.DTOs.UserDTOs;
+using UserService.DTOs.V1.UserDTOs;
+using UserService.DTOs.V1.AuthDTOs;
 
 namespace UserService.Repositories
 {

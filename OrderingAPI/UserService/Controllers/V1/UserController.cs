@@ -8,11 +8,13 @@ using System.Data.Common;
 using System.Linq;
 using System.Security.Claims;
 using OrderingAPI.Shared.Models;
-using UserService.DTOs.UserDTOs;
+using Asp.Versioning;
+using UserService.DTOs.V1.UserDTOs;
 
-namespace UserService.Controllers
+namespace UserService.Controllers.V1
 {
-    [Route("api/users")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVerison}/users")]
     [ApiController]
     [Authorize]
     public class UserController : ControllerBase
@@ -24,7 +26,7 @@ namespace UserService.Controllers
             _repository = repository;   
         }
 
-        // GET: api/users
+        // GET: api/v1/users
         [HttpGet]
         [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<UsersDTO>>>> GetUsers()
@@ -43,7 +45,7 @@ namespace UserService.Controllers
             return Ok(response);
         }
 
-        // GET: api/users/5
+        // GET: api/v1/users/5
         [HttpGet("{userID}")]
         public async Task<ActionResult<ServiceResponse<UsersDTO>>> GetUser(int userID)
         {
@@ -70,7 +72,7 @@ namespace UserService.Controllers
             return Ok(response);
         }
 
-        // GET: api/users/user-total-spending
+        // GET: api/v1/users/user-total-spending
         [HttpGet("user-total-spending")]
         [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<UserTotalSpendingDTO>>>> GetUserTotalSpending()
@@ -87,7 +89,7 @@ namespace UserService.Controllers
             return Ok(response);
         }
 
-        // GET: api/users/user-total-spending?userID={}
+        // GET: api/v1/users/user-total-spending?userID={}
         [HttpGet("user-total-spending/{userID}")]
         public async Task<ActionResult<ServiceResponse<UserTotalSpendingDTO>>> GetUserTotalSpending(int userID)
         {
@@ -120,7 +122,7 @@ namespace UserService.Controllers
             return Ok(response);
         }
 
-        // POST: api/users
+        // POST: api/v1/users
         [HttpPost]
         [Authorize (Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<AddUserDTO>>> PostUser(AddUserDTO user)
@@ -146,7 +148,7 @@ namespace UserService.Controllers
             return Ok(response);
         }
 
-        // PUT: api/users?userID={}
+        // PUT: api/v1/users?userID={}
         [HttpPut("{userID}")]
         public async Task<ActionResult<ServiceResponse<UpdateUserDTO>>> UpdateUser(int userID, UpdateUserDTO user)
         {
