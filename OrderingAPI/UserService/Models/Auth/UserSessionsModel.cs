@@ -1,6 +1,6 @@
-﻿namespace UserService.DTOs.V1.AuthDTOs
+﻿namespace UserService.Models.Auth
 {
-    public class UserSessionsDTO
+    public class UserSessionsModel
     {
         public int ID { get; set; }
         public int UserID { get; set; }

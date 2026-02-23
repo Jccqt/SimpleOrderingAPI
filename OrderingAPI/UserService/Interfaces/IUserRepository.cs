@@ -1,5 +1,5 @@
 ﻿using UserService.DTOs.V1.UserDTOs;
-using UserService.Models;
+using UserService.Models.Users;
 
 namespace UserService.Interfaces
 {

@@ -8,6 +8,7 @@ using Google.Apis.Auth;
 using UserService.DTOs.V1.UserDTOs;
 using UserService.DTOs.V1.AuthDTOs;
 using Asp.Versioning;
+using UserService.Models.Auth;
 
 namespace UserService.Controllers.V1
 {
@@ -38,7 +39,7 @@ namespace UserService.Controllers.V1
                 });
             }
 
-            var result = await authRepository.Login(login);
+            var result = await authRepository.Login(login.Email, login.Password);
 
 
             if (!result.Success)
@@ -54,7 +55,7 @@ namespace UserService.Controllers.V1
             {
                 Success = true,
                 Message = "Login Successful!",
-                Data = result
+                Data = LoginResponseMapper(result)
             });
         }
 
@@ -107,7 +108,7 @@ namespace UserService.Controllers.V1
             });
         }
 
-        // POST: api/auth/refresh-token
+        // POST: api/v1/auth/refresh-token
         [HttpPost("refresh-token")]
         public async Task<ActionResult<ServiceResponse<LoginResponseDTO>>> RefreshToken(RefreshTokenRequestDTO request)
         {
@@ -119,14 +120,30 @@ namespace UserService.Controllers.V1
                 });
             }
 
-            var response = await authRepository.RefreshToken(request);
+            var response = await authRepository.RefreshToken(request.ExpiredToken, request.RefreshToken);
 
             if (!response.Success)
             {
                 return Unauthorized(response);
             }
 
-            return Ok(response);
+            return Ok(new ServiceResponse<LoginResponseDTO>
+            {
+                Success = true,
+                Message = "Successfully refreshed token",
+                Data = LoginResponseMapper(response)
+            });
         }
+
+        public static LoginResponseDTO LoginResponseMapper(LoginResponseModel login) =>
+            new LoginResponseDTO
+            {
+                Success = login.Success,
+                UserID = login.UserID,
+                FullName = login.FullName,
+                Role = login.Role,
+                Token = login.Token,
+                RefreshToken = login.RefreshToken
+            };
     }
 }

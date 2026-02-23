@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Interfaces;
-using UserService.Models;
 using UserService.Repositories;
 using System.Data.Common;
 using System.Linq;
@@ -10,6 +9,7 @@ using System.Security.Claims;
 using OrderingAPI.Shared.Models;
 using Asp.Versioning;
 using UserService.DTOs.V1.UserDTOs;
+using UserService.Models.Users;
 
 namespace UserService.Controllers.V1
 {

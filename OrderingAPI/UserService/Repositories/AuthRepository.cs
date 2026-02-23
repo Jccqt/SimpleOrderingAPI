@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Data;
 using UserService.DTOs.V1.UserDTOs;
 using UserService.DTOs.V1.AuthDTOs;
+using UserService.Models.Auth;
 
 namespace UserService.Repositories
 {
@@ -23,9 +24,9 @@ namespace UserService.Repositories
             _configuration = configuration;
         }
 
-        public async Task<UserSessionsDTO> GenerateRefreshToken(int userID)
+        public async Task<UserSessionsModel> GenerateRefreshToken(int userID)
         {
-            var refreshToken = new UserSessionsDTO
+            var refreshToken = new UserSessionsModel
             {
                 UserID = userID,
                 Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
@@ -70,9 +71,9 @@ namespace UserService.Repositories
             return principal;
         }
 
-        public async Task<LoginResponseDTO> RefreshToken(RefreshTokenRequestDTO request)
+        public async Task<LoginResponseModel> RefreshToken(string expiredToken, string refreshToken)
         {
-            var principal = GetPrincipalFromExpiredToken(request.ExpiredToken);
+            var principal = GetPrincipalFromExpiredToken(expiredToken);
             var userID = principal.FindFirstValue(ClaimTypes.NameIdentifier);
             var userRole = principal.FindFirstValue(ClaimTypes.Role);
             var email = principal.FindFirstValue(ClaimTypes.Email);
@@ -81,13 +82,13 @@ namespace UserService.Repositories
             await conn.OpenAsync();
 
             using var cmd = new MySqlCommand("SELECT * FROM user_sessions WHERE token = @token", conn);
-            cmd.Parameters.AddWithValue("@token", request.RefreshToken);
+            cmd.Parameters.AddWithValue("@token", refreshToken);
 
             using var reader = await cmd.ExecuteReaderAsync();
 
             if(!await reader.ReadAsync())
             {
-                return new LoginResponseDTO
+                return new LoginResponseModel
                 {
                     Success = false
                 };
@@ -103,7 +104,7 @@ namespace UserService.Repositories
             {
                 await RevokeRefreshTokens(dbUserID);
 
-                return new LoginResponseDTO
+                return new LoginResponseModel
                 {
                     Success = false
                 };
@@ -115,7 +116,7 @@ namespace UserService.Repositories
 
             var newRefreshToken = await GenerateRefreshToken(int.Parse(userID));
 
-            return new LoginResponseDTO
+            return new LoginResponseModel
             {
                 Success = true,
                 Token = newJwtToken,
@@ -164,19 +165,19 @@ namespace UserService.Repositories
             return tokenHandler.WriteToken(token);
         }
 
-        public async Task<LoginResponseDTO> Login(LoginRequestDTO login)
+        public async Task<LoginResponseModel> Login(string email, string password)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
             using var cmd = new MySqlCommand("SELECT user_id, full_name, email, role, salt, password FROM users WHERE email = @email AND status = 1", conn);
-            cmd.Parameters.AddWithValue("@email", login.Email);
+            cmd.Parameters.AddWithValue("@email", email);
 
             using var reader = await cmd.ExecuteReaderAsync();
 
             if(await reader.ReadAsync())
             {
-                if(CustomSecurity.HashPassword(login.Password, reader["salt"].ToString()) == reader["password"].ToString())
+                if(CustomSecurity.HashPassword(password, reader["salt"].ToString()) == reader["password"].ToString())
                 {
                     string token = CreateToken(
                         Convert.ToInt32(reader["user_id"]),
@@ -185,7 +186,7 @@ namespace UserService.Repositories
 
                     var refreshToken = await GenerateRefreshToken(Convert.ToInt32(reader["user_id"]));
 
-                    return new LoginResponseDTO
+                    return new LoginResponseModel
                     {
                         Success = true,
                         UserID = Convert.ToInt32(reader["user_id"]),
@@ -197,7 +198,7 @@ namespace UserService.Repositories
                 }
             }
 
-            return new LoginResponseDTO { Success = false };
+            return new LoginResponseModel { Success = false };
         }
     }
 }
