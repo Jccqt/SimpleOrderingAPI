@@ -26,7 +26,27 @@ namespace ApiGateway.Controllers
         [AcceptVerbs("GET", "POST", "PUT")]
         public async Task<IActionResult> HandleRequests(string path)
         {
-            var serviceKey = path.Split('/')[0];
+            var segments = path.Split('/');
+            var serviceKey = segments[0];
+
+            if (serviceKey.StartsWith("v", StringComparison.OrdinalIgnoreCase) &&
+                serviceKey.Length > 1 &&
+                char.IsDigit(serviceKey[1]))
+            {
+                if (segments.Length > 1)
+                {
+                    serviceKey = segments[1];
+                }
+                else
+                {
+                    return BadRequest(new ServiceResponse<object>
+                    {
+                        Success = false,
+                        Message = "Invalid API route structure."
+                    });
+                }
+            }
+
             var route = await _repository.GetRouteByPath(serviceKey);
 
             if (route == null)

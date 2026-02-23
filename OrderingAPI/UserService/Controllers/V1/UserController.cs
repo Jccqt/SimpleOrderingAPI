@@ -14,7 +14,7 @@ using UserService.DTOs.V1.UserDTOs;
 namespace UserService.Controllers.V1
 {
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVerison}/users")]
+    [Route("api/v{version:apiVersion}/users")]
     [ApiController]
     [Authorize]
     public class UserController : ControllerBase
