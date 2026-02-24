@@ -6,8 +6,8 @@ using ProductService.Models;
 using ProductService.Repositories;
 using OrderingAPI.Shared.Models;
 using System.Data.Common;
-using ProductService.DTOs.V1.ProductDTOs.ProductDTOs;
 using Asp.Versioning;
+using ProductService.DTOs.V1.ProductDTOs;
 
 namespace ProductService.Controllers.V1
 {
@@ -81,7 +81,7 @@ namespace ProductService.Controllers.V1
                 });
             }
 
-            await _repository.AddProduct(product);
+            await _repository.AddProduct(AddProductMapper(product));
 
             var response = new ServiceResponse<AddProductDTO>
             {
@@ -107,7 +107,7 @@ namespace ProductService.Controllers.V1
                 });
             }
 
-            bool result = await _repository.UpdateProduct(productID, product);
+            bool result = await _repository.UpdateProduct(productID, UpdateProductMapper(product));
 
             if (!result)
             {
@@ -135,6 +135,22 @@ namespace ProductService.Controllers.V1
                 ProductName = products.product_name,
                 Price = products.price,
                 Stock = products.stock
+            };
+
+        private AddProductModel AddProductMapper(AddProductDTO product) =>
+            new AddProductModel
+            {
+                ProductName = product.ProductName,
+                Price = product.Price,
+                Stock = product.Stock
+            };
+
+        private UpdateProductModel UpdateProductMapper(UpdateProductDTO product) =>
+            new UpdateProductModel
+            {
+                ProductName = product.ProductName,
+                Price = product.Price,
+                Stock = product.Stock
             };
     }
 }

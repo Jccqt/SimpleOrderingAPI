@@ -1,6 +1,6 @@
-﻿namespace ProductService.DTOs.V1.ProductDTOs.ProductDTOs
+﻿namespace ProductService.Models
 {
-    public class UpdateProductDTO
+    public class UpdateProductModel
     {
         public string? ProductName { get; set; }
         public decimal? Price { get; set; }

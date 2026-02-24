@@ -1,5 +1,4 @@
-﻿using ProductService.DTOs.V1.ProductDTOs.ProductDTOs;
-using ProductService.Models;
+﻿using ProductService.Models;
 
 namespace ProductService.Interfaces
 {
@@ -7,7 +6,7 @@ namespace ProductService.Interfaces
     {
         Task<List<Products>> GetAllProducts();
         Task<Products> GetProduct(int productID);
-        Task AddProduct(AddProductDTO product);
-        Task<bool> UpdateProduct(int productID, UpdateProductDTO product);
+        Task AddProduct(AddProductModel product);
+        Task<bool> UpdateProduct(int productID, UpdateProductModel product);
     }
 }

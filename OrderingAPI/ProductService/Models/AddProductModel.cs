@@ -1,8 +1,7 @@
-﻿namespace ProductService.DTOs.V1.ProductDTOs.ProductDTOs
+﻿namespace ProductService.Models
 {
-    public class ProductsDTO
+    public class AddProductModel
     {
-        public required int ProductID { get; set; }
         public required string ProductName { get; set; }
         public required decimal Price { get; set; }
         public required int Stock { get; set; }

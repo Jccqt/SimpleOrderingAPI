@@ -1,5 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
-using ProductService.DTOs.V1.ProductDTOs.ProductDTOs;
+using ProductService.DTOs.V1.ProductDTOs;
 using ProductService.Interfaces;
 using ProductService.Models;
 using System.Data;
@@ -66,7 +66,7 @@ namespace ProductService.Repositories
             return null;
         }
 
-        public async Task AddProduct(AddProductDTO product)
+        public async Task AddProduct(AddProductModel product)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -80,7 +80,7 @@ namespace ProductService.Repositories
             await cmd.ExecuteNonQueryAsync();
         }
 
-        public async Task<bool> UpdateProduct(int productID, UpdateProductDTO product)
+        public async Task<bool> UpdateProduct(int productID, UpdateProductModel product)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
