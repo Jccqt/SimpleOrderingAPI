@@ -75,9 +75,9 @@ namespace UserService.Repositories
             return null;
         }
 
-        public async Task<List<UserTotalSpendingDTO>> GetAllUserTotalSpending()
+        public async Task<List<UserTotalSpendingModel>> GetAllUserTotalSpending()
         {
-            List<UserTotalSpendingDTO> users = new List<UserTotalSpendingDTO>();
+            List<UserTotalSpendingModel> users = new List<UserTotalSpendingModel>();
 
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -88,7 +88,7 @@ namespace UserService.Repositories
 
             while(await reader.ReadAsync())
             {
-                var user = new UserTotalSpendingDTO
+                var user = new UserTotalSpendingModel
                 {
                     UserID = Convert.ToInt32(reader["User ID"]),
                     Name = reader["Name"].ToString(),
@@ -101,7 +101,7 @@ namespace UserService.Repositories
             return users;
         }
 
-        public async Task<UserTotalSpendingDTO> GetUserTotalSpending(int userID)
+        public async Task<UserTotalSpendingModel> GetUserTotalSpending(int userID)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -113,7 +113,7 @@ namespace UserService.Repositories
 
             if(await reader.ReadAsync())
             {
-                return new UserTotalSpendingDTO
+                return new UserTotalSpendingModel
                 {
                     UserID = Convert.ToInt32(reader["User ID"]),
                     Name = reader["Name"].ToString(),
@@ -124,7 +124,7 @@ namespace UserService.Repositories
             return null;
         }
 
-        public async Task AddUser(AddUserDTO user)
+        public async Task AddUser(AddUserModel user)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -142,7 +142,7 @@ namespace UserService.Repositories
             await cmd.ExecuteNonQueryAsync();
         }
 
-        public async Task AddGoogleUser(AddGoogleUserDTO googleUser)
+        public async Task AddGoogleUser(AddGoogleUserModel googleUser)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -162,7 +162,7 @@ namespace UserService.Repositories
             await cmd.ExecuteNonQueryAsync();
         }
 
-        public async Task<bool> UpdateUser(int userID, UpdateUserDTO user)
+        public async Task<bool> UpdateUser(int userID, UpdateUserModel user)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -190,7 +190,7 @@ namespace UserService.Repositories
             return rowAffected > 0;
         }
 
-        public async Task<UserLoginDTO> FindByEmail(string email)
+        public async Task<UserLoginModel> FindByEmail(string email)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -202,7 +202,7 @@ namespace UserService.Repositories
 
             if (await reader.ReadAsync())
             {
-                return new UserLoginDTO
+                return new UserLoginModel
                 {
                     UserID = Convert.ToInt32(reader["user_id"]),
                     FullName = reader["full_name"].ToString(),

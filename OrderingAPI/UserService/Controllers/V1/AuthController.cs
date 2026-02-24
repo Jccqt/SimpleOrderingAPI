@@ -9,6 +9,7 @@ using UserService.DTOs.V1.UserDTOs;
 using UserService.DTOs.V1.AuthDTOs;
 using Asp.Versioning;
 using UserService.Models.Auth;
+using UserService.Models.Users;
 
 namespace UserService.Controllers.V1
 {
@@ -83,7 +84,7 @@ namespace UserService.Controllers.V1
                     FullName = name
                 };
 
-                await userRepository.AddGoogleUser(googleUser);
+                await userRepository.AddGoogleUser(AddGoogleUserMapper(googleUser));
 
                 user = await userRepository.FindByEmail(email);
             }
@@ -135,7 +136,7 @@ namespace UserService.Controllers.V1
             });
         }
 
-        public static LoginResponseDTO LoginResponseMapper(LoginResponseModel login) =>
+        private LoginResponseDTO LoginResponseMapper(LoginResponseModel login) =>
             new LoginResponseDTO
             {
                 Success = login.Success,
@@ -144,6 +145,13 @@ namespace UserService.Controllers.V1
                 Role = login.Role,
                 Token = login.Token,
                 RefreshToken = login.RefreshToken
+            };
+
+        private AddGoogleUserModel AddGoogleUserMapper(AddGoogleUserDTO user) =>
+            new AddGoogleUserModel
+            {
+                FullName = user.FullName,
+                Email = user.Email
             };
     }
 }

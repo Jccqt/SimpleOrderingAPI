@@ -1,5 +1,4 @@
-﻿using UserService.DTOs.V1.UserDTOs;
-using UserService.Models.Users;
+﻿using UserService.Models.Users;
 
 namespace UserService.Interfaces
 {
@@ -7,11 +6,11 @@ namespace UserService.Interfaces
     {
         Task<List<Users>> GetAllUsers();
         Task<Users> GetUser(int userID);
-        Task<List<UserTotalSpendingDTO>> GetAllUserTotalSpending();
-        Task<UserTotalSpendingDTO> GetUserTotalSpending(int userID);
-        Task AddUser(AddUserDTO user);
-        Task AddGoogleUser(AddGoogleUserDTO googleUser);
-        Task<bool> UpdateUser(int userID, UpdateUserDTO user);
-        Task<UserLoginDTO> FindByEmail(string email);
+        Task<List<UserTotalSpendingModel>> GetAllUserTotalSpending();
+        Task<UserTotalSpendingModel> GetUserTotalSpending(int userID);
+        Task AddUser(AddUserModel user);
+        Task AddGoogleUser(AddGoogleUserModel googleUser);
+        Task<bool> UpdateUser(int userID, UpdateUserModel user);
+        Task<UserLoginModel> FindByEmail(string email);
     }
 }

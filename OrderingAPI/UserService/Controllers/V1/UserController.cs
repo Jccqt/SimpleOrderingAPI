@@ -83,7 +83,7 @@ namespace UserService.Controllers.V1
             {
                 Success = true,
                 Message = "Users total spending retrieved successfully",
-                Data = users
+                Data = users.Select(user => UserTotalSpendingMapper(user))
             };
 
             return Ok(response);
@@ -116,7 +116,7 @@ namespace UserService.Controllers.V1
             {
                 Success = true,
                 Message = "User total spending retrieved successfully",
-                Data = user
+                Data = UserTotalSpendingMapper(user)
             };
 
             return Ok(response);
@@ -136,7 +136,7 @@ namespace UserService.Controllers.V1
                 });
             }
 
-            await _repository.AddUser(user);
+            await _repository.AddUser(AddUserMapper(user));
 
             var response = new ServiceResponse<AddUserDTO>
             {
@@ -172,7 +172,7 @@ namespace UserService.Controllers.V1
                 });
             }
 
-            bool result = await _repository.UpdateUser(userID, user);
+            bool result = await _repository.UpdateUser(userID, UpdateUserMapper(user));
 
             if (!result)
             {
@@ -202,6 +202,33 @@ namespace UserService.Controllers.V1
                 CreatedAt = user.created_at.ToString("yyyy-MM-dd"),
                 Role = user.role,
                 Status = user.status == 1 ? "Active" : "Inactive"
+            };
+
+        private AddUserModel AddUserMapper(AddUserDTO user) =>
+            new AddUserModel
+            {
+                FullName = user.FullName,
+                Email = user.Email,
+                Password = user.Password,
+                Role = user.Role
+            };
+
+        private UpdateUserModel UpdateUserMapper(UpdateUserDTO user) =>
+            new UpdateUserModel
+            {
+                FullName = user.FullName,
+                Email = user.Email,
+                Password = user.Password,
+                Role = user.Role,
+                Status = user.Status
+            };
+
+        private UserTotalSpendingDTO UserTotalSpendingMapper(UserTotalSpendingModel user) =>
+            new UserTotalSpendingDTO
+            {
+                UserID = user.UserID,
+                Name = user.Name,
+                TotalSpending = user.TotalSpending
             };
     }
 }
