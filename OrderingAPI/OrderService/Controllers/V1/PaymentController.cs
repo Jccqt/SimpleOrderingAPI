@@ -47,7 +47,7 @@ namespace OrderService.Controllers.V1
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<AddPaymentDTO>>> AddPayment(AddPaymentDTO payment)
         {
-            bool success = await _repository.AddPayment(payment);
+            bool success = await _repository.AddPayment(AddPaymentMapper(payment));
 
             if (!success)
             {
@@ -76,6 +76,14 @@ namespace OrderService.Controllers.V1
                 PaymentMethod = payments.payment_method,
                 Amount = payments.amount,
                 PaymentDate = payments.payment_date
+            };
+
+        private AddPaymentModel AddPaymentMapper(AddPaymentDTO payment) =>
+            new AddPaymentModel
+            {
+                OrderID = payment.OrderID,
+                PaymentMethod = payment.PaymentMethod,
+                Amount = payment.Amount
             };
     }
 }

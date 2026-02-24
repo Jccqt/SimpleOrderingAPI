@@ -43,7 +43,7 @@ namespace OrderService.Repositories
             return payments;
         }
 
-        public async Task<bool> AddPayment(AddPaymentDTO payment)
+        public async Task<bool> AddPayment(AddPaymentModel payment)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
