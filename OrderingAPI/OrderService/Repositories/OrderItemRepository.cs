@@ -1,7 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using OrderService.DTOs.V1.OrderItemDTOs;
 using OrderService.Interfaces;
-using OrderService.Models;
+using OrderService.Models.OrderItem;
 using System.Data;
 
 namespace OrderService.Repositories
@@ -72,7 +72,7 @@ namespace OrderService.Repositories
             return orderItems;
         }
 
-        public async Task<bool> AddOrderItem(AddOrderItemDTO orderItem)
+        public async Task<bool> AddOrderItem(AddOrderItemModel orderItem)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();

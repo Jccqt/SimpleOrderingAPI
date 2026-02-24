@@ -1,5 +1,5 @@
 ﻿using OrderService.DTOs.V1.OrderDTOs;
-using OrderService.Models;
+using OrderService.Models.Order;
 
 namespace OrderService.Interfaces
 {

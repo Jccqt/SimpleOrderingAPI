@@ -6,9 +6,9 @@ using OrderService.Interfaces;
 using OrderingAPI.Shared.Models;
 using OrderService.Repositories;
 using System.Data.Common;
-using OrderService.Models;
 using OrderService.DTOs.V1.OrderItemDTOs;
 using Asp.Versioning;
+using OrderService.Models.OrderItem;
 
 namespace OrderService.Controllers.V1
 {
@@ -75,7 +75,7 @@ namespace OrderService.Controllers.V1
         [HttpPost]
         public async Task<ActionResult<AddOrderItemDTO>> AddOrderItem(AddOrderItemDTO orderItem)
         {
-            bool success = await _repository.AddOrderItem(orderItem);
+            bool success = await _repository.AddOrderItem(AddOrderItemMapper(orderItem));
 
             if (!success)
             {
@@ -104,6 +104,15 @@ namespace OrderService.Controllers.V1
                 ProductID = orderItems.product_id,
                 Quantity = orderItems.quantity,
                 Price = orderItems.price
+            };
+
+        private AddOrderItemModel AddOrderItemMapper(AddOrderItemDTO orderItem) =>
+            new AddOrderItemModel
+            {
+                OrderID = orderItem.OrderID,
+                ProductID = orderItem.ProductID,
+                Quantity = orderItem.Quantity,
+                Price = orderItem.Price
             };
     }
 }

@@ -1,7 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using OrderService.DTOs.V1.OrderDTOs;
 using OrderService.Interfaces;
-using OrderService.Models;
+using OrderService.Models.Order;
 using System.Data;
 
 namespace OrderService.Repositories

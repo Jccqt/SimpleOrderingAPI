@@ -5,9 +5,9 @@ using OrderService.Interfaces;
 using OrderingAPI.Shared.Models;
 using OrderService.Repositories;
 using System.Data.Common;
-using OrderService.Models;
 using OrderService.DTOs.V1.PaymentDTOs;
 using Asp.Versioning;
+using OrderService.Models.Payment;
 
 namespace OrderService.Controllers.V1
 {

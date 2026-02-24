@@ -1,5 +1,5 @@
 ﻿using OrderService.DTOs.V1.PaymentDTOs;
-using OrderService.Models;
+using OrderService.Models.Payment;
 
 namespace OrderService.Interfaces
 {

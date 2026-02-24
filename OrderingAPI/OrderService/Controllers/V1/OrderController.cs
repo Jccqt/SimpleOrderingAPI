@@ -6,9 +6,9 @@ using OrderingAPI.Shared.Models;
 using OrderService.Repositories;
 using System.Data.Common;
 using System.Security.Claims;
-using OrderService.Models;
 using OrderService.DTOs.V1.OrderDTOs;
 using Asp.Versioning;
+using OrderService.Models.Order;
 
 namespace OrderService.Controllers.V1
 {

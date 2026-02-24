@@ -1,5 +1,4 @@
-﻿using OrderService.DTOs.V1.OrderItemDTOs;
-using OrderService.Models;
+﻿using OrderService.Models.OrderItem;
 
 namespace OrderService.Interfaces
 {
@@ -7,6 +6,6 @@ namespace OrderService.Interfaces
     {
         Task<List<OrderItems>> GetAllOrderItems();
         Task<List<OrderItems>> GetOrderItems(int id);
-        Task<bool> AddOrderItem(AddOrderItemDTO orderItem);
+        Task<bool> AddOrderItem(AddOrderItemModel orderItem);
     }
 }

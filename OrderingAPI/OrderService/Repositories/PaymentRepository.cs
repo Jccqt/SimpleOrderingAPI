@@ -1,7 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using OrderService.DTOs.V1.PaymentDTOs;
 using OrderService.Interfaces;
-using OrderService.Models;
+using OrderService.Models.Payment;
 using System.Data;
 
 namespace OrderService.Repositories
