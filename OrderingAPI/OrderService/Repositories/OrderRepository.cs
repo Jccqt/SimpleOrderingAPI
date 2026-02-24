@@ -66,9 +66,9 @@ namespace OrderService.Repositories
             return null;
         }
 
-        public async Task<List<OrderItemDetailsDTO>> GetAllOrderItemDetails()
+        public async Task<List<OrderItemDetailsModel>> GetAllOrderItemDetails()
         {
-            List<OrderItemDetailsDTO> orders = new List<OrderItemDetailsDTO>();
+            List<OrderItemDetailsModel> orders = new List<OrderItemDetailsModel>();
 
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -79,7 +79,7 @@ namespace OrderService.Repositories
 
             while(await reader.ReadAsync())
             {
-                var order = new OrderItemDetailsDTO
+                var order = new OrderItemDetailsModel
                 {
                     OrderID = Convert.ToInt32(reader["Order ID"]),
                     ProductID = Convert.ToInt32(reader["Product ID"]),
@@ -94,7 +94,7 @@ namespace OrderService.Repositories
             return orders;
         }
 
-        public async Task<OrderItemDetailsDTO> GetOrderItemDetails(int orderID)
+        public async Task<OrderItemDetailsModel> GetOrderItemDetails(int orderID)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -106,7 +106,7 @@ namespace OrderService.Repositories
 
             if(await reader.ReadAsync())
             {
-                return new OrderItemDetailsDTO
+                return new OrderItemDetailsModel
                 {
                     OrderID = Convert.ToInt32(reader["Order ID"]),
                     ProductID = Convert.ToInt32(reader["Product ID"]),
@@ -119,9 +119,9 @@ namespace OrderService.Repositories
             return null;
         }
 
-        public async Task<List<OrdersWithUserInfoDTO>> GetAllOrdersWithUserInfo()
+        public async Task<List<OrdersWithUserInfoModel>> GetAllOrdersWithUserInfo()
         {
-            List<OrdersWithUserInfoDTO> orders = new List<OrdersWithUserInfoDTO>();
+            List<OrdersWithUserInfoModel> orders = new List<OrdersWithUserInfoModel>();
 
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -132,7 +132,7 @@ namespace OrderService.Repositories
 
             while(await reader.ReadAsync())
             {
-                var order = new OrdersWithUserInfoDTO
+                var order = new OrdersWithUserInfoModel
                 {
                     OrderID = Convert.ToInt32(reader["Order ID"]),
                     UserID = Convert.ToInt32(reader["User ID"]),
@@ -146,7 +146,7 @@ namespace OrderService.Repositories
             return orders;
         }
 
-        public async Task<OrdersWithUserInfoDTO> GetOrderWithUserInfo(int orderID)
+        public async Task<OrdersWithUserInfoModel> GetOrderWithUserInfo(int orderID)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -158,7 +158,7 @@ namespace OrderService.Repositories
 
             if(await reader.ReadAsync())
             {
-                return new OrdersWithUserInfoDTO
+                return new OrdersWithUserInfoModel
                 {
                     OrderID = Convert.ToInt32(reader["Order ID"]),
                     UserID = Convert.ToInt32(reader["User ID"]),
@@ -170,7 +170,7 @@ namespace OrderService.Repositories
             return null;
         }
 
-        public async Task<bool> AddOrder(AddOrderDTO order)
+        public async Task<bool> AddOrder(AddOrderModel order)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();

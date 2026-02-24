@@ -27,7 +27,7 @@ namespace OrderService.Controllers.V1
 
         // GET: api/v1/orders
         [HttpGet]
-        [Authorize (Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<OrdersDTO>>>> GetOrders()
         {
             var result = await _repository.GetAllOrders();
@@ -53,7 +53,7 @@ namespace OrderService.Controllers.V1
 
             var order = await _repository.GetOrder(orderID);
 
-            if(order.user_id != tokenUserID || tokenRole != "Admin")
+            if (order.user_id != tokenUserID || tokenRole != "Admin")
             {
                 return Forbid();
             }
@@ -79,7 +79,7 @@ namespace OrderService.Controllers.V1
 
         // GET: api/v1/orders/order-items-details
         [HttpGet("order-item-details")]
-        [Authorize (Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<OrderItemDetailsDTO>>>> GetOrderItemDetails()
         {
             var orders = await _repository.GetAllOrderItemDetails();
@@ -88,7 +88,7 @@ namespace OrderService.Controllers.V1
             {
                 Success = true,
                 Message = "Order item details retrieved successfully!",
-                Data = orders
+                Data = orders.Select(order => OrderItemDetailsMapper(order))
             };
 
             return Ok(response);
@@ -113,7 +113,7 @@ namespace OrderService.Controllers.V1
             {
                 Success = true,
                 Message = "Order item details retrieved successfully!",
-                Data = order
+                Data = OrderItemDetailsMapper(order)
             };
 
             return Ok(response);
@@ -121,7 +121,7 @@ namespace OrderService.Controllers.V1
 
         // GET: api/v1/orders/orders-with-user-info
         [HttpGet("order-with-user-info")]
-        [Authorize (Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<OrdersWithUserInfoDTO>>>> GetOrderWithUserInfo()
         {
             var orders = await _repository.GetAllOrdersWithUserInfo();
@@ -130,7 +130,7 @@ namespace OrderService.Controllers.V1
             {
                 Success = true,
                 Message = "Orders with user info retrieved successfully!",
-                Data = orders
+                Data = orders.Select(order => OrderWithUserInfoMapper(order))
             };
 
             return Ok(response);
@@ -145,12 +145,12 @@ namespace OrderService.Controllers.V1
 
             var order = await _repository.GetOrderWithUserInfo(orderID);
 
-            if(order.UserID != tokenUserID || tokenRole != "Admin")
+            if (order.UserID != tokenUserID || tokenRole != "Admin")
             {
                 return Forbid();
             }
 
-            if(order == null)
+            if (order == null)
             {
                 return NotFound(new ServiceResponse<OrdersWithUserInfoDTO>
                 {
@@ -163,12 +163,12 @@ namespace OrderService.Controllers.V1
             {
                 Success = true,
                 Message = "Order with user info retrieved successfully!",
-                Data = order
+                Data = OrderWithUserInfoMapper(order)
             };
 
             return Ok(response);
         }
- 
+
         // POST: api/v1/orders
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<AddOrderDTO>>> AddOrder(AddOrderDTO order)
@@ -182,7 +182,7 @@ namespace OrderService.Controllers.V1
                 });
             }
 
-            bool success = await _repository.AddOrder(order);
+            bool success = await _repository.AddOrder(AddOrderMapper(order));
 
             if (!success)
             {
@@ -203,13 +203,39 @@ namespace OrderService.Controllers.V1
             return Ok(response);
         }
 
-        private OrdersDTO OrdersToOrdersDTO(    Orders order) =>
+        private OrdersDTO OrdersToOrdersDTO(Orders order) =>
             new OrdersDTO
             {
                 OrderID = order.order_id,
                 UserID = order.user_id,
                 OrderDate = order.order_date,
                 Status = order.status
+            };
+
+        private OrderItemDetailsDTO OrderItemDetailsMapper(OrderItemDetailsModel order) =>
+            new OrderItemDetailsDTO
+            {
+                OrderID = order.OrderID,
+                ProductID = order.ProductID,
+                ProductName = order.ProductName,
+                OrderQuantity = order.OrderQuantity,
+                OrderAmount = order.OrderAmount
+            };
+
+        private OrdersWithUserInfoDTO OrderWithUserInfoMapper(OrdersWithUserInfoModel order) =>
+            new OrdersWithUserInfoDTO
+            {
+                OrderID = order.OrderID,
+                UserID = order.UserID,
+                UserName = order.UserName,
+                Email = order.Email
+            };
+
+        private AddOrderModel AddOrderMapper(AddOrderDTO order) =>
+            new AddOrderModel
+            {
+                UserID = order.UserID,
+                Status = order.Status
             };
     }
 }
