@@ -10,12 +10,14 @@ using OrderingAPI.Shared.Models;
 using Asp.Versioning;
 using UserService.DTOs.V1.UserDTOs;
 using UserService.Models.Users;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace UserService.Controllers.V1
 {
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/users")]
     [ApiController]
+    [EnableRateLimiting("fixed")]
     [Authorize]
     public class UserController : ControllerBase
     {

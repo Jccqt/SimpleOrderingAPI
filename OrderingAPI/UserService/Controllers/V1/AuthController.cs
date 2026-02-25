@@ -10,12 +10,14 @@ using UserService.DTOs.V1.AuthDTOs;
 using Asp.Versioning;
 using UserService.Models.Auth;
 using UserService.Models.Users;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace UserService.Controllers.V1
 {
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/auth")]
     [ApiController]
+    [EnableRateLimiting("fixed")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthRepository authRepository;
