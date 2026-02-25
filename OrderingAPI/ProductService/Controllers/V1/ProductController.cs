@@ -8,12 +8,14 @@ using OrderingAPI.Shared.Models;
 using System.Data.Common;
 using Asp.Versioning;
 using ProductService.DTOs.V1.ProductDTOs;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace ProductService.Controllers.V1
 {
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/products")]
     [ApiController]
+    [EnableRateLimiting("fixed")]
     [Authorize]
     public class ProductController : ControllerBase
     {
