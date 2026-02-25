@@ -8,12 +8,14 @@ using System.Data.Common;
 using OrderService.DTOs.V1.PaymentDTOs;
 using Asp.Versioning;
 using OrderService.Models.Payment;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace OrderService.Controllers.V1
 {
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/payments")]
     [ApiController]
+    [EnableRateLimiting("fixed")]
     [Authorize]
     public class PaymentController : ControllerBase
     {

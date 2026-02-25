@@ -9,12 +9,14 @@ using System.Data.Common;
 using OrderService.DTOs.V1.OrderItemDTOs;
 using Asp.Versioning;
 using OrderService.Models.OrderItem;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace OrderService.Controllers.V1
 {
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/order-item")]
     [ApiController]
+    [EnableRateLimiting("fixed")]
     [Authorize]
     public class OrderItemController : ControllerBase
     {
