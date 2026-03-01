@@ -6,11 +6,11 @@ using UserService.Repositories;
 using System.Data.Common;
 using System.Linq;
 using System.Security.Claims;
-using OrderingAPI.Shared.Models;
 using Asp.Versioning;
 using UserService.DTOs.V1.UserDTOs;
 using UserService.Models.Users;
 using Microsoft.AspNetCore.RateLimiting;
+using OrderingAPI.Shared.Models.Responses;
 
 namespace UserService.Controllers.V1
 {

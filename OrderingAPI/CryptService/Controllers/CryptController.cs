@@ -2,7 +2,7 @@
 using CryptService.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OrderingAPI.Shared.Models;
+using OrderingAPI.Shared.Models.Responses;
 
 namespace CryptService.Controllers
 {

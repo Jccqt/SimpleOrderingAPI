@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Interfaces;
-using OrderingAPI.Shared.Models;
 using OrderService.Repositories;
 using System.Data.Common;
 using System.Security.Claims;
@@ -10,6 +9,7 @@ using OrderService.DTOs.V1.OrderDTOs;
 using Asp.Versioning;
 using OrderService.Models.Order;
 using Microsoft.AspNetCore.RateLimiting;
+using OrderingAPI.Shared.Models.Responses;
 
 namespace OrderService.Controllers.V1
 {

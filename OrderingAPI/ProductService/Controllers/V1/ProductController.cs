@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using ProductService.Interfaces;
 using ProductService.Models;
 using ProductService.Repositories;
-using OrderingAPI.Shared.Models;
 using System.Data.Common;
 using Asp.Versioning;
 using ProductService.DTOs.V1.ProductDTOs;
 using Microsoft.AspNetCore.RateLimiting;
+using OrderingAPI.Shared.Models.Responses;
 
 namespace ProductService.Controllers.V1
 {

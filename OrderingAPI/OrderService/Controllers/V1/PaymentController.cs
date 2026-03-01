@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Interfaces;
-using OrderingAPI.Shared.Models;
 using OrderService.Repositories;
 using System.Data.Common;
 using OrderService.DTOs.V1.PaymentDTOs;
 using Asp.Versioning;
 using OrderService.Models.Payment;
 using Microsoft.AspNetCore.RateLimiting;
+using OrderingAPI.Shared.Models.Responses;
 
 namespace OrderService.Controllers.V1
 {

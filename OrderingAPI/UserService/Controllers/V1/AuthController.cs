@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Interfaces;
 using UserService.Models;
-using OrderingAPI.Shared.Models;
 using Google.Apis.Auth;
 using UserService.DTOs.V1.UserDTOs;
 using UserService.DTOs.V1.AuthDTOs;
@@ -11,6 +10,7 @@ using Asp.Versioning;
 using UserService.Models.Auth;
 using UserService.Models.Users;
 using Microsoft.AspNetCore.RateLimiting;
+using OrderingAPI.Shared.Models.Responses;
 
 namespace UserService.Controllers.V1
 {
