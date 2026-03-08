@@ -1,16 +1,17 @@
-﻿using UserService.Models.Users;
+﻿using OrderingAPI.Shared.Models.Responses;
+using UserService.Models.Users;
 
 namespace UserService.Interfaces
 {
     public interface IUserRepository
     {
-        Task<List<Users>> GetAllUsers();
-        Task<Users> GetUser(int userID);
-        Task<List<UserTotalSpendingModel>> GetAllUserTotalSpending();
-        Task<UserTotalSpendingModel> GetUserTotalSpending(int userID);
-        Task AddUser(AddUserModel user);
-        Task AddGoogleUser(AddGoogleUserModel googleUser);
-        Task<bool> UpdateUser(int userID, UpdateUserModel user);
-        Task<UserLoginModel> FindByEmail(string email);
+        Task<ServiceResponse<object>> GetAllUsers();
+        Task<ServiceResponse<object>> GetUser(int userID);
+        Task<ServiceResponse<object>> GetAllUserTotalSpending();
+        Task<ServiceResponse<object>> GetUserTotalSpending(int userID);
+        Task<ServiceResponse> AddUser(AddUserModel user);
+        Task<ServiceResponse> AddGoogleUser(AddGoogleUserModel googleUser);
+        Task<ServiceResponse> UpdateUser(int userID, UpdateUserModel user);
+        Task<ServiceResponse<object>> FindByEmail(string email);
     }
 }

@@ -4,6 +4,8 @@ using UserService.Interfaces;
 using OrderingAPI.Shared.Helpers;
 using UserService.DTOs.V1.UserDTOs;
 using UserService.Models.Users;
+using OrderingAPI.Shared.Models.Responses;
+using System.Reflection.Metadata.Ecma335;
 
 namespace UserService.Repositories
 {
@@ -16,7 +18,7 @@ namespace UserService.Repositories
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        public async Task<List<Users>> GetAllUsers()
+        public async Task<ServiceResponse<object>> GetAllUsers()
         {
             List<Users> users = new List<Users>();
 
@@ -44,10 +46,15 @@ namespace UserService.Repositories
                 users.Add(user);
             }
 
-            return users;
+            return new ServiceResponse<object>
+            {
+                Success = true,
+                Message = "Successfully retrieved users",
+                Data = users
+            };
         }
 
-        public async Task<Users> GetUser(int userID)
+        public async Task<ServiceResponse<object>> GetUser(int userID)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -59,7 +66,7 @@ namespace UserService.Repositories
 
             if(await reader.ReadAsync())
             {
-                return new Users
+                var user =  new Users
                 {
                     user_id = Convert.ToInt32(reader["user_id"]),
                     full_name = reader["full_name"].ToString(),
@@ -70,12 +77,23 @@ namespace UserService.Repositories
                     created_at = Convert.ToDateTime(reader["created_at"]),
                     status = Convert.ToInt32(reader["status"])
                 };
+
+                return new ServiceResponse<object>
+                {
+                    Success = true,
+                    Message = "User found",
+                    Data = user
+                };
             }
 
-            return null;
+            return new ServiceResponse<object>
+            {
+                Success = false,
+                Message = "User not found"
+            };
         }
 
-        public async Task<List<UserTotalSpendingModel>> GetAllUserTotalSpending()
+        public async Task<ServiceResponse<object>> GetAllUserTotalSpending()
         {
             List<UserTotalSpendingModel> users = new List<UserTotalSpendingModel>();
 
@@ -98,10 +116,15 @@ namespace UserService.Repositories
                 users.Add(user);
             }
 
-            return users;
+            return new ServiceResponse<object>
+            {
+                Success = true,
+                Message = "Users total spending found",
+                Data = users
+            };
         }
 
-        public async Task<UserTotalSpendingModel> GetUserTotalSpending(int userID)
+        public async Task<ServiceResponse<object>> GetUserTotalSpending(int userID)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -113,18 +136,29 @@ namespace UserService.Repositories
 
             if(await reader.ReadAsync())
             {
-                return new UserTotalSpendingModel
+                var userTotalSpending =  new UserTotalSpendingModel
                 {
                     UserID = Convert.ToInt32(reader["User ID"]),
                     Name = reader["Name"].ToString(),
                     TotalSpending = Convert.ToDecimal(reader["Total Spending"])
                 };
+
+                return new ServiceResponse<object>
+                {
+                    Success = true,
+                    Message = "User total spending found",
+                    Data = userTotalSpending
+                };
             }
 
-            return null;
+            return new ServiceResponse<object>
+            {
+                Success = false,
+                Message = "User total spending not found"
+            };
         }
 
-        public async Task AddUser(AddUserModel user)
+        public async Task<ServiceResponse> AddUser(AddUserModel user)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -139,10 +173,25 @@ namespace UserService.Repositories
             cmd.Parameters.AddWithValue("@p_salt", salt);
             cmd.Parameters.AddWithValue("@p_role", user.Role);
 
-            await cmd.ExecuteNonQueryAsync();
+            int rowAffected = await cmd.ExecuteNonQueryAsync();
+
+            if(rowAffected > 0)
+            {
+                return new ServiceResponse
+                {
+                    Success = true,
+                    Message = "User added successfully."
+                };
+            }
+
+            return new ServiceResponse
+            {
+                Success = false,
+                Message = "Failed to add user."
+            };
         }
 
-        public async Task AddGoogleUser(AddGoogleUserModel googleUser)
+        public async Task<ServiceResponse> AddGoogleUser(AddGoogleUserModel googleUser)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -159,10 +208,25 @@ namespace UserService.Repositories
             cmd.Parameters.AddWithValue("@p_salt", dummySalt);
             cmd.Parameters.AddWithValue("@p_role", "Customer");
 
-            await cmd.ExecuteNonQueryAsync();
+            int rowAffected = await cmd.ExecuteNonQueryAsync();
+
+            if(rowAffected > 0)
+            {
+                return new ServiceResponse
+                {
+                    Success = true,
+                    Message = "Google user added successfully."
+                };
+            }
+
+            return new ServiceResponse
+            {
+                Success = false,
+                Message = "Failed to add Google user."
+            };
         }
 
-        public async Task<bool> UpdateUser(int userID, UpdateUserModel user)
+        public async Task<ServiceResponse> UpdateUser(int userID, UpdateUserModel user)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -187,10 +251,23 @@ namespace UserService.Repositories
 
             int rowAffected = await cmd.ExecuteNonQueryAsync();
 
-            return rowAffected > 0;
+            if(rowAffected > 0)
+            {
+                return new ServiceResponse
+                {
+                    Success = true,
+                    Message = "Successfully updated the user."
+                };
+            }
+
+            return new ServiceResponse
+            {
+                Success = false,
+                Message = "Failed to update the user."
+            };
         }
 
-        public async Task<UserLoginModel> FindByEmail(string email)
+        public async Task<ServiceResponse<object>> FindByEmail(string email)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -202,16 +279,27 @@ namespace UserService.Repositories
 
             if (await reader.ReadAsync())
             {
-                return new UserLoginModel
+                var userLogin =  new UserLoginModel
                 {
                     UserID = Convert.ToInt32(reader["user_id"]),
                     FullName = reader["full_name"].ToString(),
                     Email = reader["email"].ToString(),
                     Role = reader["role"].ToString()
                 };
+
+                return new ServiceResponse<object>
+                {
+                    Success = true,
+                    Message = "User found.",
+                    Data = userLogin
+                };
             }
 
-            return null;
+            return new ServiceResponse<object>
+            {
+                Success = false,
+                Message = "No user found."
+            };
         }
     }
 }
