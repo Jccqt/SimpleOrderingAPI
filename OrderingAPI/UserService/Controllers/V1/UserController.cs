@@ -54,25 +54,16 @@ namespace UserService.Controllers.V1
         {
             var result = await _repository.GetUser(userID);
 
-            if (result == null)
+            if (result.Success)
             {
-                return NotFound(new ServiceResponse<UsersDTO>
-                {
-                    Success = false,
-                    Message = "User not found."
-                });
+                var user = UserToUsersDTO(result.Data as Users);
+
+                result.Data = user;
+
+                return Ok(user);
             }
 
-            var user = UserToUsersDTO(result);
-
-            var response = new ServiceResponse<UsersDTO>
-            {
-                Success = true,
-                Message = "User retrieved successfully",
-                Data = user
-            };
-
-            return Ok(response);
+            return BadRequest(result);
         }
 
         // GET: api/v1/users/user-total-spending
