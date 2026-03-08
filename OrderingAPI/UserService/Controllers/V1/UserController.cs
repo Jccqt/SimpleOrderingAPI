@@ -35,16 +35,17 @@ namespace UserService.Controllers.V1
         {
             var result = await _repository.GetAllUsers();
 
-            var users = result.Select(u => UserToUsersDTO(u));
-
-            var response = new ServiceResponse<IEnumerable<UsersDTO>>
+            if (result.Success)
             {
-                Success = true,
-                Message = "Users retrieved successfully",
-                Data = users
-            };
+                var users = UserToUsersDTO(result.Data as Users);
 
-            return Ok(response);
+                result.Data = users;
+
+                return Ok(users);
+            }
+
+
+            return BadRequest(result);
         }
 
         // GET: api/v1/users/5
