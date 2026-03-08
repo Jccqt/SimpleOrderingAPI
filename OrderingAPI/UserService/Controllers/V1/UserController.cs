@@ -154,25 +154,9 @@ namespace UserService.Controllers.V1
                 });
             }
 
-            bool result = await _repository.UpdateUser(userID, UpdateUserMapper(user));
+            var result = await _repository.UpdateUser(userID, UpdateUserMapper(user));
 
-            if (!result)
-            {
-                return NotFound(new ServiceResponse<UpdateUserDTO>
-                {
-                    Success = false,
-                    Message = "User not found."
-                });
-            }
-
-            var response = new ServiceResponse<UpdateUserDTO>
-            {
-                Success = true,
-                Message = "User updated successfully!",
-                Data = user
-            };
-
-            return Ok(response);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         private UsersDTO UserToUsersDTO(Users user) =>
