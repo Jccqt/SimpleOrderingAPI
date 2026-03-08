@@ -125,6 +125,15 @@ namespace UserService.Repositories
                 users.Add(user);
             }
 
+            if(users.Count == 0)
+            {
+                return new ServiceResponse<object>
+                {
+                    Success = false,
+                    Message = "No users total spending found."
+                };
+            }
+
             return new ServiceResponse<object>
             {
                 Success = true,
