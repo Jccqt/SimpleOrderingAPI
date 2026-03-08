@@ -69,18 +69,20 @@ namespace UserService.Controllers.V1
         // GET: api/v1/users/user-total-spending
         [HttpGet("user-total-spending")]
         [Authorize (Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<IEnumerable<UserTotalSpendingDTO>>>> GetUserTotalSpending()
+        public async Task<ActionResult<ServiceResponse<IEnumerable<UserTotalSpendingDTO>>>> GetUsersTotalSpending()
         {
-            var users = await _repository.GetAllUserTotalSpending();
+            var result = await _repository.GetAllUserTotalSpending();
 
-            var response = new ServiceResponse<IEnumerable<UserTotalSpendingDTO>>
+            if (result.Success)
             {
-                Success = true,
-                Message = "Users total spending retrieved successfully",
-                Data = users.Select(user => UserTotalSpendingMapper(user))
-            };
+                var usersTotalSpending = UserTotalSpendingMapper(result.Data as UserTotalSpendingModel);
 
-            return Ok(response);
+                result.Data = usersTotalSpending;
+
+                return Ok(usersTotalSpending);
+            }
+
+            return BadRequest(result);
         }
 
         // GET: api/v1/users/user-total-spending?userID={}
