@@ -114,7 +114,7 @@ namespace UserService.Controllers.V1
         // POST: api/v1/users
         [HttpPost]
         [Authorize (Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<AddUserDTO>>> PostUser(AddUserDTO user)
+        public async Task<ActionResult<ServiceResponse<AddUserDTO>>> AddUser(AddUserDTO user)
         {
             if (user == null)
             {
@@ -125,16 +125,9 @@ namespace UserService.Controllers.V1
                 });
             }
 
-            await _repository.AddUser(AddUserMapper(user));
+            var result = await _repository.AddUser(AddUserMapper(user));
 
-            var response = new ServiceResponse<AddUserDTO>
-            {
-                Success = true,
-                Message = "User added successfully!",
-                Data = user
-            };
-
-            return Ok(response);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         // PUT: api/v1/users?userID={}
