@@ -97,25 +97,18 @@ namespace UserService.Controllers.V1
                 return Forbid();
             }
 
-            var user = await _repository.GetUserTotalSpending(userID);
+            var result = await _repository.GetUserTotalSpending(userID);
 
-            if (user == null)
+            if (result.Success)
             {
-                return NotFound(new ServiceResponse<UserTotalSpendingDTO>
-                {
-                    Success = false,
-                    Message = "User total spending not found."
-                });
+                var userTotalSpending = UserTotalSpendingMapper(result.Data as UserTotalSpendingModel);
+
+                result.Data = userTotalSpending;
+
+                return Ok(userTotalSpending);
             }
 
-            var response = new ServiceResponse<UserTotalSpendingDTO>
-            {
-                Success = true,
-                Message = "User total spending retrieved successfully",
-                Data = UserTotalSpendingMapper(user)
-            };
-
-            return Ok(response);
+            return BadRequest(result);
         }
 
         // POST: api/v1/users
