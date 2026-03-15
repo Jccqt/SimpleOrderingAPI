@@ -50,7 +50,7 @@ namespace UserService.Controllers.V1
 
         // GET: api/v1/users/5
         [HttpGet("{userID}")]
-        public async Task<ActionResult<ServiceResponse<UsersDTO>>> GetUser(int userID)
+        public async Task<ActionResult<ServiceResponse<UsersDTO>>> GetUser([FromRoute] int userID)
         {
             var result = await _repository.GetUser(userID);
 
@@ -85,9 +85,9 @@ namespace UserService.Controllers.V1
             return BadRequest(result);
         }
 
-        // GET: api/v1/users/user-total-spending?userID={}
+        // GET: api/v1/users/user-total-spending/{userID}
         [HttpGet("user-total-spending/{userID}")]
-        public async Task<ActionResult<ServiceResponse<UserTotalSpendingDTO>>> GetUserTotalSpending(int userID)
+        public async Task<ActionResult<ServiceResponse<UserTotalSpendingDTO>>> GetUserTotalSpending([FromRoute] int userID)
         {
             int tokenUserID = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             string tokenRole = User.FindFirstValue(ClaimTypes.Role);
@@ -114,7 +114,7 @@ namespace UserService.Controllers.V1
         // POST: api/v1/users
         [HttpPost]
         [Authorize (Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<AddUserDTO>>> AddUser(AddUserDTO user)
+        public async Task<ActionResult<ServiceResponse<AddUserDTO>>> AddUser([FromBody] AddUserDTO user)
         {
             if (user == null)
             {
@@ -132,7 +132,7 @@ namespace UserService.Controllers.V1
 
         // PUT: api/v1/users?userID={}
         [HttpPut("{userID}")]
-        public async Task<ActionResult<ServiceResponse<UpdateUserDTO>>> UpdateUser(int userID, UpdateUserDTO user)
+        public async Task<ActionResult<ServiceResponse<UpdateUserDTO>>> UpdateUser([FromBody] UpdateUserDTO user)
         {
             int tokenUserID = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             string tokenUserRole = User.FindFirstValue(ClaimTypes.Role);
@@ -154,7 +154,7 @@ namespace UserService.Controllers.V1
                 });
             }
 
-            var result = await _repository.UpdateUser(userID, UpdateUserMapper(user));
+            var result = await _repository.UpdateUser(user.UserID, UpdateUserMapper(user));
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
