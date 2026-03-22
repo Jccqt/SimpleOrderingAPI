@@ -10,6 +10,7 @@ using System.Data;
 using UserService.DTOs.V1.UserDTOs;
 using UserService.DTOs.V1.AuthDTOs;
 using UserService.Models.Auth;
+using OrderingAPI.Shared.Models.Responses;
 
 namespace UserService.Repositories
 {
@@ -165,7 +166,7 @@ namespace UserService.Repositories
             return tokenHandler.WriteToken(token);
         }
 
-        public async Task<LoginResponseModel> Login(string email, string password)
+        public async Task<ServiceResponse<object>> Login(string email, string password)
         {
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -186,7 +187,7 @@ namespace UserService.Repositories
 
                     var refreshToken = await GenerateRefreshToken(Convert.ToInt32(reader["user_id"]));
 
-                    return new LoginResponseModel
+                    var loginResponseModel = new LoginResponseModel
                     {
                         Success = true,
                         UserID = Convert.ToInt32(reader["user_id"]),
@@ -195,10 +196,21 @@ namespace UserService.Repositories
                         Token = token,
                         RefreshToken = refreshToken.Token
                     };
+
+                    return new ServiceResponse<object>
+                    {
+                        Success = true,
+                        Message = "Login successfuly!",
+                        Data = loginResponseModel
+                    };
                 }
             }
 
-            return new LoginResponseModel { Success = false };
+            return new ServiceResponse<object>
+            {
+                Success = false,
+                Message = "Login failed."
+            }
         }
     }
 }

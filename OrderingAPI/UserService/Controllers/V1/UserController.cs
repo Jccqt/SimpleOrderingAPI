@@ -139,7 +139,7 @@ namespace UserService.Controllers.V1
 
             if(tokenUserRole != "Admin")
             {
-                if(tokenUserID != userID)
+                if(tokenUserID != user.UserID)
                 {
                     return Forbid();
                 }
