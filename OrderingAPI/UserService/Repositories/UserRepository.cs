@@ -100,6 +100,7 @@ namespace UserService.Repositories
 
         public async Task<ServiceResponse<object>> GetAllUserTotalSpending()
         {
+            var response = new ServiceResponse<object>();
             List<UserTotalSpendingModel> users = new List<UserTotalSpendingModel>();
 
             using var conn = new MySqlConnection(_connectionString);
@@ -121,21 +122,18 @@ namespace UserService.Repositories
                 users.Add(user);
             }
 
-            if(users.Count == 0)
+            if(users.Count > 0)
             {
-                return new ServiceResponse<object>
-                {
-                    Success = false,
-                    Message = "No users total spending found."
-                };
+                response.Success = true;
+                response.Message = "Users total spending found.";
+                response.Data = users;
+            }
+            else
+            {
+                response.Message = "No user total spending found.";
             }
 
-            return new ServiceResponse<object>
-            {
-                Success = true,
-                Message = "Users total spending found",
-                Data = users
-            };
+            return response;
         }
 
         public async Task<ServiceResponse<object>> GetUserTotalSpending(int userID)
