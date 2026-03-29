@@ -63,6 +63,7 @@ namespace UserService.Repositories
 
         public async Task<ServiceResponse<object>> GetUser(int userID)
         {
+            var response = new ServiceResponse<object>();
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
@@ -85,19 +86,16 @@ namespace UserService.Repositories
                     status = Convert.ToInt32(reader["status"])
                 };
 
-                return new ServiceResponse<object>
-                {
-                    Success = true,
-                    Message = "User found",
-                    Data = user
-                };
+                response.Success = true;
+                response.Message = "User found.";
+                response.Data = user;
+            }
+            else
+            {
+                response.Message = "No user found.";
             }
 
-            return new ServiceResponse<object>
-            {
-                Success = false,
-                Message = "User not found"
-            };
+            return response;
         }
 
         public async Task<ServiceResponse<object>> GetAllUserTotalSpending()
