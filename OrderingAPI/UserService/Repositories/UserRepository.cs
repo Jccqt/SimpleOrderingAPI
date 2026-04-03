@@ -138,6 +138,7 @@ namespace UserService.Repositories
 
         public async Task<ServiceResponse<object>> GetUserTotalSpending(int userID)
         {
+            var response = new ServiceResponse<object>();
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
@@ -155,23 +156,21 @@ namespace UserService.Repositories
                     TotalSpending = Convert.ToDecimal(reader["Total Spending"])
                 };
 
-                return new ServiceResponse<object>
-                {
-                    Success = true,
-                    Message = "User total spending found",
-                    Data = userTotalSpending
-                };
+                response.Success = true;
+                response.Message = "User total spending found.";
+                response.Data = userTotalSpending;
+            }
+            else
+            {
+                response.Message = "No user total spending found.";
             }
 
-            return new ServiceResponse<object>
-            {
-                Success = false,
-                Message = "User total spending not found"
-            };
+            return response;
         }
 
         public async Task<ServiceResponse> AddUser(AddUserModel user)
         {
+            var response = new ServiceResponse();
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
@@ -189,18 +188,15 @@ namespace UserService.Repositories
 
             if(rowAffected > 0)
             {
-                return new ServiceResponse
-                {
-                    Success = true,
-                    Message = "User added successfully."
-                };
+                response.Success = true;
+                response.Message = "User added successfully.";
+            }
+            else
+            {
+                response.Message = "Failed to add user.";
             }
 
-            return new ServiceResponse
-            {
-                Success = false,
-                Message = "Failed to add user."
-            };
+            return response;
         }
 
         public async Task<ServiceResponse> AddGoogleUser(AddGoogleUserModel googleUser)
