@@ -201,6 +201,7 @@ namespace UserService.Repositories
 
         public async Task<ServiceResponse> AddGoogleUser(AddGoogleUserModel googleUser)
         {
+            var response = new ServiceResponse();
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
@@ -220,22 +221,20 @@ namespace UserService.Repositories
 
             if(rowAffected > 0)
             {
-                return new ServiceResponse
-                {
-                    Success = true,
-                    Message = "Google user added successfully."
-                };
+                response.Success = true;
+                response.Message = "Google user added successfully.";
+            }
+            else
+            {
+                response.Message = "Failed to add Google user.";
             }
 
-            return new ServiceResponse
-            {
-                Success = false,
-                Message = "Failed to add Google user."
-            };
+            return response;
         }
 
         public async Task<ServiceResponse> UpdateUser(int userID, UpdateUserModel user)
         {
+            var response = new ServiceResponse();
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
@@ -261,22 +260,20 @@ namespace UserService.Repositories
 
             if(rowAffected > 0)
             {
-                return new ServiceResponse
-                {
-                    Success = true,
-                    Message = "Successfully updated the user."
-                };
+                response.Success = true;
+                response.Message = "Successfully updated the user.";
+            }
+            else
+            {
+                response.Message = "Failed to update the user.";
             }
 
-            return new ServiceResponse
-            {
-                Success = false,
-                Message = "Failed to update the user."
-            };
+            return response;
         }
 
         public async Task<ServiceResponse<object>> FindByEmail(string email)
         {
+            var response = new ServiceResponse<object>();
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
@@ -295,19 +292,16 @@ namespace UserService.Repositories
                     Role = reader["role"].ToString()
                 };
 
-                return new ServiceResponse<object>
-                {
-                    Success = true,
-                    Message = "User found.",
-                    Data = userLogin
-                };
+                response.Success = true;
+                response.Message = "User found.";
+                response.Data = userLogin;
+            }
+            else
+            {
+                response.Message = "No user found.";
             }
 
-            return new ServiceResponse<object>
-            {
-                Success = false,
-                Message = "No user found."
-            };
+            return response;
         }
     }
 }
