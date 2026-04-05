@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using OrderingAPI.Shared.Models.Responses;
 using OrderService.DTOs.V1.PaymentDTOs;
 using OrderService.Interfaces;
 using OrderService.Models.Payment;
@@ -15,8 +16,9 @@ namespace OrderService.Repositories
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        public async Task<List<Payments>> GetAllPayments()
+        public async Task<ServiceResponse<object>> GetAllPayments()
         {
+            var response = new ServiceResponse<object>();
             List<Payments> payments = new List<Payments>();
 
             using var conn = new MySqlConnection(_connectionString);
@@ -40,7 +42,18 @@ namespace OrderService.Repositories
                 payments.Add(payment);
             }
 
-            return payments;
+            if(payments.Count > 0)
+            {
+                response.Success = true;
+                response.Message = "Payments found.";
+                response.Data = payments;
+            }
+            else
+            {
+                response.Message = "No payment found.";
+            }
+
+            return response;
         }
 
         public async Task<bool> AddPayment(AddPaymentModel payment)
