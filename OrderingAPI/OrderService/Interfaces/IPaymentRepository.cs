@@ -6,6 +6,6 @@ namespace OrderService.Interfaces
     public interface IPaymentRepository
     {
         Task<ServiceResponse<object>> GetAllPayments();
-        Task<bool> AddPayment(AddPaymentModel payment);
+        Task<ServiceResponse> AddPayment(AddPaymentModel payment);
     }
 }

@@ -56,8 +56,9 @@ namespace OrderService.Repositories
             return response;
         }
 
-        public async Task<bool> AddPayment(AddPaymentModel payment)
+        public async Task<ServiceResponse> AddPayment(AddPaymentModel payment)
         {
+            var response = new ServiceResponse();
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
@@ -73,9 +74,19 @@ namespace OrderService.Repositories
 
             await cmd.ExecuteNonQueryAsync();
 
-            int result = Convert.ToInt32(resultParam.Value);
+            int affectedRow = Convert.ToInt32(resultParam.Value);
 
-            return result == 1;
+            if(affectedRow > 0)
+            {
+                response.Success = true;
+                response.Message = "Payment added successfully.";
+            }
+            else
+            {
+                response.Message = "Failed to add payment.";
+            }
+
+            return response;
         }
     }
 }
