@@ -33,16 +33,7 @@ namespace OrderService.Controllers.V1
         {
             var result = await _repository.GetAllPayments();
 
-            var payments = result.Select(p => PaymentsToPaymentDTO(p));
-
-            var response = new ServiceResponse<IEnumerable<PaymentDTO>>
-            {
-                Success = true,
-                Message = "Payments retrieved successfully!",
-                Data = payments
-            };
-
-            return Ok(response);
+            return result.Success ? Ok(result) : NotFound(result);
         }
 
         // POST: api/v1/payments
