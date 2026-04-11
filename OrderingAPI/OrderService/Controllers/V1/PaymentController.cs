@@ -40,25 +40,9 @@ namespace OrderService.Controllers.V1
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<AddPaymentDTO>>> AddPayment(AddPaymentDTO payment)
         {
-            bool success = await _repository.AddPayment(AddPaymentMapper(payment));
+            var result = await _repository.AddPayment(AddPaymentMapper(payment));
 
-            if (!success)
-            {
-                return NotFound(new ServiceResponse<AddPaymentDTO>
-                {
-                    Success = false,
-                    Message = "Order ID not found."
-                });
-            }
-
-            var response = new ServiceResponse<AddPaymentDTO>
-            {
-                Success = true,
-                Message = "Payment added successfull!",
-                Data = payment
-            };
-
-            return Ok(response);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         private PaymentDTO PaymentsToPaymentDTO(Payments payments) =>
