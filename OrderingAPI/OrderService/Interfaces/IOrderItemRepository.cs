@@ -1,10 +1,11 @@
-﻿using OrderService.Models.OrderItem;
+﻿using OrderingAPI.Shared.Models.Responses;
+using OrderService.Models.OrderItem;
 
 namespace OrderService.Interfaces
 {
     public interface IOrderItemRepository
     {
-        Task<List<OrderItems>> GetAllOrderItems();
+        Task<ServiceResponse<object>> GetAllOrderItems();
         Task<List<OrderItems>> GetOrderItems(int id);
         Task<bool> AddOrderItem(AddOrderItemModel orderItem);
     }
