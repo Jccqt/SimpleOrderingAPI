@@ -56,8 +56,9 @@ namespace OrderService.Repositories
             return response;
         }
 
-        public async Task<List<OrderItems>> GetOrderItems(int id)
+        public async Task<ServiceResponse<object>> GetOrderItems(int id)
         {
+            var response = new ServiceResponse<object>();
             List<OrderItems> orderItems = new List<OrderItems>();
 
             using var conn = new MySqlConnection(_connectionString);
@@ -82,7 +83,18 @@ namespace OrderService.Repositories
                 orderItems.Add(orderItem);
             }
 
-            return orderItems;
+            if(orderItems.Count > 0)
+            {
+                response.Success = true;
+                response.Message = "Items of the order found.";
+                response.Data = orderItems;
+            }
+            else
+            {
+                response.Message = "No item found in the order.";
+            }
+
+            return response;
         }
 
         public async Task<bool> AddOrderItem(AddOrderItemModel orderItem)
