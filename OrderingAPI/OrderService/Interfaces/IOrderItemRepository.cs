@@ -7,6 +7,6 @@ namespace OrderService.Interfaces
     {
         Task<ServiceResponse<object>> GetAllOrderItems();
         Task<ServiceResponse<object>> GetOrderItems(int id);
-        Task<bool> AddOrderItem(AddOrderItemModel orderItem);
+        Task<ServiceResponse> AddOrderItem(AddOrderItemModel orderItem);
     }
 }

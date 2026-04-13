@@ -97,8 +97,9 @@ namespace OrderService.Repositories
             return response;
         }
 
-        public async Task<bool> AddOrderItem(AddOrderItemModel orderItem)
+        public async Task<ServiceResponse> AddOrderItem(AddOrderItemModel orderItem)
         {
+            var response = new ServiceResponse();
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
@@ -117,7 +118,17 @@ namespace OrderService.Repositories
 
             int result = Convert.ToInt32(resultParam.Value);
 
-            return result == 1;
+            if(result == 1)
+            {
+                response.Success = true;
+                response.Message = "Order item added.";
+            }
+            else
+            {
+                response.Message = "Failed to add order item.";
+            }
+
+            return response;
         }
     }
 }
