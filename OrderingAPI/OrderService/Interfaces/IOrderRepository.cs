@@ -6,7 +6,7 @@ namespace OrderService.Interfaces
     public interface IOrderRepository
     {
         Task<ServiceResponse<object>> GetAllOrders();
-        Task<Orders> GetOrder(int orderID);
+        Task<ServiceResponse<object>> GetOrder(int orderID);
         Task<List<OrderItemDetailsModel>> GetAllOrderItemDetails();
         Task<OrderItemDetailsModel> GetOrderItemDetails(int orderID);
         Task<List<OrdersWithUserInfoModel>> GetAllOrdersWithUserInfo();

@@ -55,8 +55,9 @@ namespace OrderService.Repositories
             return response;
         }
 
-        public async Task<Orders> GetOrder(int orderID)
+        public async Task<ServiceResponse<object>> GetOrder(int orderID)
         {
+            var response = new ServiceResponse<object>();
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
@@ -67,16 +68,24 @@ namespace OrderService.Repositories
 
             if(await reader.ReadAsync())
             {
-                return new Orders
+                var order =  new Orders
                 {
                     order_id = Convert.ToInt32(reader["order_id"]),
                     user_id = Convert.ToInt32(reader["user_id"]),
                     order_date = Convert.ToDateTime(reader["order_date"]),
                     status = reader["status"].ToString()
                 };
+
+                response.Success = true;
+                response.Message = "Order found.";
+                response.Data = order;
+            }
+            else
+            {
+                response.Message = "No order found.";
             }
 
-            return null;
+            return response;
         }
 
         public async Task<List<OrderItemDetailsModel>> GetAllOrderItemDetails()
