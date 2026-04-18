@@ -1,10 +1,11 @@
-﻿using OrderService.Models.Order;
+﻿using OrderingAPI.Shared.Models.Responses;
+using OrderService.Models.Order;
 
 namespace OrderService.Interfaces
 {
     public interface IOrderRepository
     {
-        Task<List<Orders>> GetAllOrders();
+        Task<ServiceResponse<object>> GetAllOrders();
         Task<Orders> GetOrder(int orderID);
         Task<List<OrderItemDetailsModel>> GetAllOrderItemDetails();
         Task<OrderItemDetailsModel> GetOrderItemDetails(int orderID);

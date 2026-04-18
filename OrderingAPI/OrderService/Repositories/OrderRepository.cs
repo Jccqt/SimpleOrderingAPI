@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using OrderingAPI.Shared.Models.Responses;
 using OrderService.DTOs.V1.OrderDTOs;
 using OrderService.Interfaces;
 using OrderService.Models.Order;
@@ -15,8 +16,9 @@ namespace OrderService.Repositories
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        public async Task<List<Orders>> GetAllOrders()
+        public async Task<ServiceResponse<object>> GetAllOrders()
         {
+            var response = new ServiceResponse<object>();
             List<Orders> orders = new List<Orders>();
 
             using var conn = new MySqlConnection(_connectionString);
@@ -39,7 +41,18 @@ namespace OrderService.Repositories
                 orders.Add(order);
             }
 
-            return orders;
+            if(orders.Count > 0)
+            {
+                response.Success = true;
+                response.Message = "Orders found.";
+                response.Data = orders;
+            }
+            else
+            {
+                response.Message = "No orders found.";
+            }
+
+            return response;
         }
 
         public async Task<Orders> GetOrder(int orderID)
