@@ -7,7 +7,7 @@ namespace OrderService.Interfaces
     {
         Task<ServiceResponse<object>> GetAllOrders();
         Task<ServiceResponse<object>> GetOrder(int orderID);
-        Task<List<OrderItemDetailsModel>> GetAllOrderItemDetails();
+        Task<ServiceResponse<object>> GetAllOrderItemDetails();
         Task<OrderItemDetailsModel> GetOrderItemDetails(int orderID);
         Task<List<OrdersWithUserInfoModel>> GetAllOrdersWithUserInfo();
         Task<OrdersWithUserInfoModel> GetOrderWithUserInfo(int orderID);
