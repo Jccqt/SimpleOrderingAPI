@@ -128,8 +128,9 @@ namespace OrderService.Repositories
             return response;
         }
 
-        public async Task<OrderItemDetailsModel> GetOrderItemDetails(int orderID)
+        public async Task<ServiceResponse<object>> GetOrderItemDetails(int orderID)
         {
+            var response = new ServiceResponse<object>();
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
@@ -140,7 +141,7 @@ namespace OrderService.Repositories
 
             if(await reader.ReadAsync())
             {
-                return new OrderItemDetailsModel
+                var orderItem = new OrderItemDetailsModel
                 {
                     OrderID = Convert.ToInt32(reader["Order ID"]),
                     ProductID = Convert.ToInt32(reader["Product ID"]),
@@ -148,9 +149,17 @@ namespace OrderService.Repositories
                     OrderQuantity = Convert.ToInt32(reader["Order Quantity"]),
                     OrderAmount = Convert.ToDecimal(reader["Order Amount"])
                 };
+
+                response.Success = true;
+                response.Message = "Order item details found.";
+                response.Data = orderItem;
+            }
+            else
+            {
+                response.Message = "No order item detail found.";
             }
 
-            return null;
+            return response;
         }
 
         public async Task<List<OrdersWithUserInfoModel>> GetAllOrdersWithUserInfo()
