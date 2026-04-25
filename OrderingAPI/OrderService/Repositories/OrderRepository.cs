@@ -162,8 +162,9 @@ namespace OrderService.Repositories
             return response;
         }
 
-        public async Task<List<OrdersWithUserInfoModel>> GetAllOrdersWithUserInfo()
+        public async Task<ServiceResponse<object>> GetAllOrdersWithUserInfo()
         {
+            var response = new ServiceResponse<object>();
             List<OrdersWithUserInfoModel> orders = new List<OrdersWithUserInfoModel>();
 
             using var conn = new MySqlConnection(_connectionString);
@@ -186,7 +187,18 @@ namespace OrderService.Repositories
                 orders.Add(order);
             }
 
-            return orders;
+            if(orders.Count > 0)
+            {
+                response.Success = true;
+                response.Message = "Orders with user info found.";
+                response.Data = orders;
+            }
+            else
+            {
+                response.Message = "No orders with user info found.";
+            }
+
+            return response;
         }
 
         public async Task<OrdersWithUserInfoModel> GetOrderWithUserInfo(int orderID)

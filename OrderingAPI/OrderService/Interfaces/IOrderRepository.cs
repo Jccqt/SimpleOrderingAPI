@@ -9,7 +9,7 @@ namespace OrderService.Interfaces
         Task<ServiceResponse<object>> GetOrder(int orderID);
         Task<ServiceResponse<object>> GetAllOrderItemDetails();
         Task<ServiceResponse<object>> GetOrderItemDetails(int orderID);
-        Task<List<OrdersWithUserInfoModel>> GetAllOrdersWithUserInfo();
+        Task<ServiceResponse<object>> GetAllOrdersWithUserInfo();
         Task<OrdersWithUserInfoModel> GetOrderWithUserInfo(int orderID);
         Task<bool> AddOrder(AddOrderModel order);
     }
