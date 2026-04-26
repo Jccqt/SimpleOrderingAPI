@@ -201,8 +201,9 @@ namespace OrderService.Repositories
             return response;
         }
 
-        public async Task<OrdersWithUserInfoModel> GetOrderWithUserInfo(int orderID)
+        public async Task<ServiceResponse<object>> GetOrderWithUserInfo(int orderID)
         {
+            var response = new ServiceResponse<object>();
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
@@ -213,16 +214,24 @@ namespace OrderService.Repositories
 
             if(await reader.ReadAsync())
             {
-                return new OrdersWithUserInfoModel
+                var order = new OrdersWithUserInfoModel
                 {
                     OrderID = Convert.ToInt32(reader["Order ID"]),
                     UserID = Convert.ToInt32(reader["User ID"]),
                     UserName = reader["User Name"].ToString(),
                     Email = reader["Email"].ToString()
                 };
+
+                response.Success = true;
+                response.Message = "Order with user info found.";
+                response.Data = order;
+            }
+            else
+            {
+                response.Message = "No order with user info found.";
             }
 
-            return null;
+            return response;
         }
 
         public async Task<bool> AddOrder(AddOrderModel order)
