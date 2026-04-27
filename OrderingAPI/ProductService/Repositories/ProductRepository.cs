@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using OrderingAPI.Shared.Models.Responses;
 using ProductService.DTOs.V1.ProductDTOs;
 using ProductService.Interfaces;
 using ProductService.Models;
@@ -15,8 +16,9 @@ namespace ProductService.Repositories
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        public async Task<List<Products>> GetAllProducts()
+        public async Task<ServiceResponse<object>> GetAllProducts()
         {
+            var response = new ServiceResponse<object>();
             List<Products> products = new List<Products>();
 
             using var conn = new MySqlConnection(_connectionString);
@@ -39,7 +41,18 @@ namespace ProductService.Repositories
                 products.Add(product);
             }
 
-            return products;
+            if(products.Count > 0)
+            {
+                response.Success = true;
+                response.Message = "Products found.";
+                response.Data = products;
+            }
+            else
+            {
+                response.Message = "No product found.";
+            }
+
+            return response;
         }
 
         public async Task<Products> GetProduct(int productID)
