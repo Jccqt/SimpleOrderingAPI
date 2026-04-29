@@ -7,7 +7,7 @@ namespace ProductService.Interfaces
     {
         Task<ServiceResponse<object>> GetAllProducts();
         Task<ServiceResponse<object>> GetProduct(int productID);
-        Task AddProduct(AddProductModel product);
+        Task<ServiceResponse> AddProduct(AddProductModel product);
         Task<bool> UpdateProduct(int productID, UpdateProductModel product);
     }
 }

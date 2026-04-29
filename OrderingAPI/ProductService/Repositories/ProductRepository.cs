@@ -88,8 +88,9 @@ namespace ProductService.Repositories
             return response;
         }
 
-        public async Task AddProduct(AddProductModel product)
+        public async Task<ServiceResponse> AddProduct(AddProductModel product)
         {
+            var response = new ServiceResponse();
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
@@ -99,7 +100,19 @@ namespace ProductService.Repositories
             cmd.Parameters.AddWithValue("@p_price", product.Price);
             cmd.Parameters.AddWithValue("@p_stock", product.Stock);
 
-            await cmd.ExecuteNonQueryAsync();
+            int affectedRow = await cmd.ExecuteNonQueryAsync();
+
+            if(affectedRow > 0)
+            {
+                response.Success = true;
+                response.Message = "Product added successfully.";
+            }
+            else
+            {
+                response.Message = "Failed to add product.";
+            }
+
+            return response;
         }
 
         public async Task<bool> UpdateProduct(int productID, UpdateProductModel product)
