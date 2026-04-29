@@ -55,8 +55,9 @@ namespace ProductService.Repositories
             return response;
         }
 
-        public async Task<Products> GetProduct(int productID)
+        public async Task<ServiceResponse<object>> GetProduct(int productID)
         {
+            var response = new ServiceResponse<object>();
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
@@ -67,16 +68,24 @@ namespace ProductService.Repositories
 
             if(await reader.ReadAsync())
             {
-                return new Products
+                var product = new Products
                 {
                     product_id = Convert.ToInt32(reader["product_id"]),
                     product_name = reader["product_name"].ToString(),
                     price = Convert.ToDecimal(reader["price"]),
                     stock = Convert.ToInt32(reader["stock"])
                 };
+
+                response.Success = true;
+                response.Message = "Product found.";
+                response.Data = product;
+            }
+            else
+            {
+                response.Message = "No product found.";
             }
 
-            return null;
+            return response;
         }
 
         public async Task AddProduct(AddProductModel product)

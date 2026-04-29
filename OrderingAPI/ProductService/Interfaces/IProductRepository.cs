@@ -6,7 +6,7 @@ namespace ProductService.Interfaces
     public interface IProductRepository
     {
         Task<ServiceResponse<object>> GetAllProducts();
-        Task<Products> GetProduct(int productID);
+        Task<ServiceResponse<object>> GetProduct(int productID);
         Task AddProduct(AddProductModel product);
         Task<bool> UpdateProduct(int productID, UpdateProductModel product);
     }
