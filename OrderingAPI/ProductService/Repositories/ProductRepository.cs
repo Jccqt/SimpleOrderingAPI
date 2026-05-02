@@ -115,8 +115,9 @@ namespace ProductService.Repositories
             return response;
         }
 
-        public async Task<bool> UpdateProduct(int productID, UpdateProductModel product)
+        public async Task<ServiceResponse> UpdateProduct(int productID, UpdateProductModel product)
         {
+            var response = new ServiceResponse();
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
@@ -129,7 +130,17 @@ namespace ProductService.Repositories
 
             int rowAffected = await cmd.ExecuteNonQueryAsync();
 
-            return rowAffected > 0;
+            if(rowAffected > 0)
+            {
+                response.Success = true;
+                response.Message = "Successfully updated product.";
+            }
+            else
+            {
+                response.Message = "Failed to update product.";
+            }
+
+            return response;
         }
     } 
 }
