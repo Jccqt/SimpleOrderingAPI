@@ -28,7 +28,7 @@ namespace ProductService.Controllers.V1
 
         // GET: api/v1/products
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<IEnumerable<ProductsDTO>>>> GetProducts()
+        public async Task<ActionResult<ServiceResponse>> GetProducts()
         {
             var result = await _repository.GetAllProducts();
 
@@ -37,27 +37,16 @@ namespace ProductService.Controllers.V1
 
         // GET: api/v1/products?id={}
         [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse<ProductsDTO>>> GetProduct(int productID)
+        public async Task<ActionResult<ServiceResponse>> GetProduct(int productID)
         {
-            var product = await _repository.GetProduct(productID);
-
-            if (product == null)
+            if(productID <= 0)
             {
-                return NotFound(new ServiceResponse<ProductsDTO>
-                {
-                    Success = false,
-                    Message = "Product not found."
-                });
+                return BadRequest(new ServiceResponse { Message = "Invalid product ID." });
             }
 
-            var response = new ServiceResponse<ProductsDTO>
-            {
-                Success = true,
-                Message = "Product retrieved successfully!",
-                Data = ProductsToProductsDTO(product)
-            };
+            var result = await _repository.GetProduct(productID);
 
-            return Ok(response);
+            return result.Success ? Ok(result) : NotFound(result);
         }
 
         // POST: api/v1/products
