@@ -32,16 +32,7 @@ namespace ProductService.Controllers.V1
         {
             var result = await _repository.GetAllProducts();
 
-            var products = result.Select(p => ProductsToProductsDTO(p));
-
-            var response = new ServiceResponse<IEnumerable<ProductsDTO>>
-            {
-                Success = true,
-                Message = "Products retrieved successfully!",
-                Data = products
-            };
-
-            return Ok(products);
+            return result.Success ? Ok(result) : NotFound(result);
         }
 
         // GET: api/v1/products?id={}
