@@ -68,36 +68,21 @@ namespace ProductService.Controllers.V1
         // PUT: api/v1/products?id={}
         [HttpPut("{productID}")]
         [Authorize (Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<UpdateProductDTO>>> UpdateProduct(int productID, UpdateProductDTO product)
+        public async Task<ActionResult<ServiceResponse>> UpdateProduct(int productID, UpdateProductDTO product)
         {
             if (product == null)
             {
-                return BadRequest(new ServiceResponse<UpdateProductDTO>
-                {
-                    Success = false,
-                    Message = "Invalid product data."
-                });
+                return BadRequest(new ServiceResponse { Message = "Invalid product data." });
             }
 
-            bool result = await _repository.UpdateProduct(productID, UpdateProductMapper(product));
-
-            if (!result)
+            if(productID <= 0)
             {
-                return NotFound(new ServiceResponse<UpdateProductDTO>
-                {
-                    Success = false,
-                    Message = "Product not found."
-                });
+                return BadRequest(new ServiceResponse { Message = "Invalid product ID." });
             }
 
-            var response = new ServiceResponse<UpdateProductDTO>
-            {
-                Success = true,
-                Message = "Product updated successfully!",
-                Data = product
-            };
+            var result = await _repository.UpdateProduct(productID, UpdateProductMapper(product));
 
-            return Ok(response);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         private ProductsDTO ProductsToProductsDTO(Products products) =>
