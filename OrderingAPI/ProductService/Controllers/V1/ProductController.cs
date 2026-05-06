@@ -9,6 +9,7 @@ using Asp.Versioning;
 using ProductService.DTOs.V1.ProductDTOs;
 using Microsoft.AspNetCore.RateLimiting;
 using OrderingAPI.Shared.Models.Responses;
+using System.Data.OleDb;
 
 namespace ProductService.Controllers.V1
 {
@@ -52,27 +53,16 @@ namespace ProductService.Controllers.V1
         // POST: api/v1/products
         [HttpPost]
         [Authorize (Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<AddProductDTO>>> AddProduct(AddProductDTO product)
+        public async Task<ActionResult<ServiceResponse>> AddProduct(AddProductDTO product)
         {
             if (product == null)
             {
-                return BadRequest(new ServiceResponse<AddProductDTO>
-                {
-                    Success = false,
-                    Message = "Invalid product data."
-                });
+                return BadRequest(new ServiceResponse { Message = "Invalid product data." });
             }
 
-            await _repository.AddProduct(AddProductMapper(product));
+            var result = await _repository.AddProduct(AddProductMapper(product));
 
-            var response = new ServiceResponse<AddProductDTO>
-            {
-                Success = true,
-                Message = "Product added successfully!",
-                Data = product
-            };
-
-            return Ok(response);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         // PUT: api/v1/products?id={}
