@@ -40,20 +40,11 @@ namespace UserService.Controllers.V1
 
         // GET: api/v1/users/5
         [HttpGet("{userID}")]
-        public async Task<ActionResult<ServiceResponse<UsersDTO>>> GetUser([FromRoute] int userID)
+        public async Task<ActionResult<ServiceResponse> GetUser([FromRoute] int userID)
         {
             var result = await _repository.GetUser(userID);
 
-            if (result.Success)
-            {
-                var user = UserToUsersDTO(result.Data as Users);
-
-                result.Data = user;
-
-                return Ok(user);
-            }
-
-            return BadRequest(result);
+            return result.Success ? Ok(result) : NotFound(result);
         }
 
         // GET: api/v1/users/user-total-spending
