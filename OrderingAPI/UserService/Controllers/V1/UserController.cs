@@ -31,21 +31,11 @@ namespace UserService.Controllers.V1
         // GET: api/v1/users
         [HttpGet]
         [Authorize (Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<IEnumerable<UsersDTO>>>> GetUsers()
+        public async Task<ActionResult<ServiceResponse>> GetUsers()
         {
             var result = await _repository.GetAllUsers();
 
-            if (result.Success)
-            {
-                var users = UserToUsersDTO(result.Data as Users);
-
-                result.Data = users;
-
-                return Ok(users);
-            }
-
-
-            return BadRequest(result);
+            return result.Success ? Ok(result) : NotFound(result);
         }
 
         // GET: api/v1/users/5
