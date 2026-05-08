@@ -59,8 +59,13 @@ namespace UserService.Controllers.V1
 
         // GET: api/v1/users/user-total-spending/{userID}
         [HttpGet("user-total-spending/{userID}")]
-        public async Task<ActionResult<ServiceResponse<UserTotalSpendingDTO>>> GetUserTotalSpending([FromRoute] int userID)
+        public async Task<ActionResult<ServiceResponse>> GetUserTotalSpending([FromRoute] int userID)
         {
+            if(userID <= 0)
+            {
+                return BadRequest(new ServiceResponse { Message = "Invalid user ID." });
+            }
+
             int tokenUserID = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             string tokenRole = User.FindFirstValue(ClaimTypes.Role);
 
@@ -71,16 +76,7 @@ namespace UserService.Controllers.V1
 
             var result = await _repository.GetUserTotalSpending(userID);
 
-            if (result.Success)
-            {
-                var userTotalSpending = UserTotalSpendingMapper(result.Data as UserTotalSpendingModel);
-
-                result.Data = userTotalSpending;
-
-                return Ok(userTotalSpending);
-            }
-
-            return BadRequest(result);
+            return result.Success ? Ok(result) : NotFound(result);
         }
 
         // POST: api/v1/users
