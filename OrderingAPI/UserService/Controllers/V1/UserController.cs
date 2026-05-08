@@ -40,7 +40,7 @@ namespace UserService.Controllers.V1
 
         // GET: api/v1/users/5
         [HttpGet("{userID}")]
-        public async Task<ActionResult<ServiceResponse> GetUser([FromRoute] int userID)
+        public async Task<ActionResult<ServiceResponse>> GetUser([FromRoute] int userID)
         {
             var result = await _repository.GetUser(userID);
 
@@ -50,20 +50,11 @@ namespace UserService.Controllers.V1
         // GET: api/v1/users/user-total-spending
         [HttpGet("user-total-spending")]
         [Authorize (Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<IEnumerable<UserTotalSpendingDTO>>>> GetUsersTotalSpending()
+        public async Task<ActionResult<ServiceResponse>> GetUsersTotalSpending()
         {
             var result = await _repository.GetAllUserTotalSpending();
 
-            if (result.Success)
-            {
-                var usersTotalSpending = UserTotalSpendingMapper(result.Data as UserTotalSpendingModel);
-
-                result.Data = usersTotalSpending;
-
-                return Ok(usersTotalSpending);
-            }
-
-            return BadRequest(result);
+            return result.Success ? Ok(result) : NotFound(result);
         }
 
         // GET: api/v1/users/user-total-spending/{userID}
