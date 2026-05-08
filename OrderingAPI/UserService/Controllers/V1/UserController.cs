@@ -82,15 +82,11 @@ namespace UserService.Controllers.V1
         // POST: api/v1/users
         [HttpPost]
         [Authorize (Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<AddUserDTO>>> AddUser([FromBody] AddUserDTO user)
+        public async Task<ActionResult<ServiceResponse>> AddUser([FromBody] AddUserDTO user)
         {
             if (user == null)
             {
-                return BadRequest(new ServiceResponse<AddUserDTO>
-                {
-                    Success = false,
-                    Message = "Invalid user data."
-                });
+                return BadRequest(new ServiceResponse { Message = "Invalid user data." });
             }
 
             var result = await _repository.AddUser(AddUserMapper(user));
