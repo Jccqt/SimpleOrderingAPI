@@ -96,7 +96,7 @@ namespace UserService.Controllers.V1
 
         // PUT: api/v1/users?userID={}
         [HttpPut("{userID}")]
-        public async Task<ActionResult<ServiceResponse<UpdateUserDTO>>> UpdateUser([FromBody] UpdateUserDTO user)
+        public async Task<ActionResult<ServiceResponse>> UpdateUser([FromBody] UpdateUserDTO user)
         {
             int tokenUserID = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             string tokenUserRole = User.FindFirstValue(ClaimTypes.Role);
@@ -111,11 +111,7 @@ namespace UserService.Controllers.V1
 
             if (user == null)
             {
-                return BadRequest(new ServiceResponse<UpdateUserDTO>
-                {
-                    Success = false,
-                    Message = "Invalid user data."
-                });
+                return BadRequest(new ServiceResponse { Message = "Invalid user data."} );
             }
 
             var result = await _repository.UpdateUser(user.UserID, UpdateUserMapper(user));
