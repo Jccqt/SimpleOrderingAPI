@@ -30,20 +30,11 @@ namespace OrderService.Controllers.V1
         // GET: api/v1/order-item
         [HttpGet]
         [Authorize (Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<IEnumerable<OrderItemDTO>>>> GetOrderItems()
+        public async Task<ActionResult<ServiceResponse>> GetOrderItems()
         {
             var result = await _repository.GetAllOrderItems();
 
-            var orderItems = result.Select(oi => OrderItemToOrderItemDTO(oi));
-
-            var response = new ServiceResponse<IEnumerable<OrderItemDTO>>
-            {
-                Success = true,
-                Message = "Order items retrieved successfully!",
-                Data = orderItems
-            };
-
-            return Ok(response);
+            return result.Success ? Ok(result) : NotFound(result);
         }
 
         // GET: api/v1/order-item/5
