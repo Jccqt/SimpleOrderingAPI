@@ -39,29 +39,16 @@ namespace OrderService.Controllers.V1
 
         // GET: api/v1/order-item/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse<IEnumerable<OrderItemDTO>>>> GetOrderItems(int id)
+        public async Task<ActionResult<ServiceResponse>> GetOrderItems(int orderId)
         {
-            var result = await _repository.GetOrderItems(id);
-
-            if(result == null)
+            if(orderId <= 0)
             {
-                return NotFound(new ServiceResponse<IEnumerable<OrderItemDTO>>
-                {
-                    Success = false,
-                    Message = "Order not found."
-                });
+                return BadRequest(new ServiceResponse { Message = "Invalid order ID." });
             }
 
-            var orderItems = result.Select(oi => OrderItemToOrderItemDTO(oi));
+            var result = await _repository.GetOrderItems(orderId);
 
-            var response = new ServiceResponse<IEnumerable<OrderItemDTO>>
-            {
-                Success = true,
-                Message = "Order items retrieved successfully!",
-                Data = orderItems
-            };
-
-            return Ok(response);
+            return result.Success ? Ok(result) : NotFound(result);
         }
 
         // POST: api/v1/order-item
