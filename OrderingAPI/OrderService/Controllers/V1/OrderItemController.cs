@@ -55,25 +55,9 @@ namespace OrderService.Controllers.V1
         [HttpPost]
         public async Task<ActionResult<AddOrderItemDTO>> AddOrderItem(AddOrderItemDTO orderItem)
         {
-            bool success = await _repository.AddOrderItem(AddOrderItemMapper(orderItem));
+            var result = await _repository.AddOrderItem(AddOrderItemMapper(orderItem));
 
-            if (!success)
-            {
-                return NotFound(new ServiceResponse<AddOrderItemDTO>
-                {
-                    Success = false,
-                    Message = "Order ID or Product ID not found."
-                });
-            }
-
-            var response = new ServiceResponse<AddOrderItemDTO>
-            {
-                Success = true,
-                Message = "Order item added successfully!",
-                Data = orderItem
-            };
-
-            return Ok(response);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         private OrderItemDTO OrderItemToOrderItemDTO(OrderItems orderItems) =>
