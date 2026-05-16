@@ -37,9 +37,9 @@ namespace OrderService.Controllers.V1
             return result.Success ? Ok(result) : NotFound(result);
         }
 
-        // GET: api/v1/order-item/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse>> GetOrderItems(int orderId)
+        // GET: api/v1/order-item/{orderId}
+        [HttpGet("{orderId}")]
+        public async Task<ActionResult<ServiceResponse>> GetOrderItems([FromRoute] int orderId)
         {
             if(orderId <= 0)
             {
@@ -53,7 +53,7 @@ namespace OrderService.Controllers.V1
 
         // POST: api/v1/order-item
         [HttpPost]
-        public async Task<ActionResult<AddOrderItemDTO>> AddOrderItem(AddOrderItemDTO orderItem)
+        public async Task<ActionResult<AddOrderItemDTO>> AddOrderItem([FromBody] AddOrderItemDTO orderItem)
         {
             var result = await _repository.AddOrderItem(AddOrderItemMapper(orderItem));
 
