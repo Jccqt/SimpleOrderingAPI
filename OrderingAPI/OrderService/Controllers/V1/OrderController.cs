@@ -37,9 +37,9 @@ namespace OrderService.Controllers.V1
             return result.Success ? Ok(result) : NotFound(result);
         }
 
-        // GET: api/v1/orders/5
+        // GET: api/v1/orders/{orderID}
         [HttpGet("{orderID}")]
-        public async Task<ActionResult<ServiceResponse<OrdersDTO>>> GetOrder(int orderID)
+        public async Task<ActionResult<ServiceResponse>> GetOrder([FromRoute]int orderID)
         {
             int tokenUserID = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             string tokenRole = User.FindFirstValue(ClaimTypes.Role);
@@ -87,9 +87,9 @@ namespace OrderService.Controllers.V1
             return Ok(response);
         }
 
-        // GET: api/v1/orders/order-items-details?orderID={}
+        // GET: api/v1/orders/order-items-details/{orderID}
         [HttpGet("order-item-details/{orderID}")]
-        public async Task<ActionResult<ServiceResponse<OrderItemDetailsDTO>>> GetOrderItemDetails(int orderID)
+        public async Task<ActionResult<ServiceResponse<OrderItemDetailsDTO>>> GetOrderItemDetails([FromRoute] int orderID)
         {
             var order = await _repository.GetOrderItemDetails(orderID);
 
@@ -129,9 +129,9 @@ namespace OrderService.Controllers.V1
             return Ok(response);
         }
 
-        // GET: api/v1/orders/orders-with-user-info?orderID={}
+        // GET: api/v1/orders/orders-with-user-info/{orderID}
         [HttpGet("orders-with-user-info/{orderID}")]
-        public async Task<ActionResult<ServiceResponse<OrdersWithUserInfoDTO>>> GetOrderWithUserInfo(int orderID)
+        public async Task<ActionResult<ServiceResponse<OrdersWithUserInfoDTO>>> GetOrderWithUserInfo([FromRoute] int orderID)
         {
             int tokenUserID = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             string tokenRole = User.FindFirstValue(ClaimTypes.Role);
@@ -164,7 +164,7 @@ namespace OrderService.Controllers.V1
 
         // POST: api/v1/orders
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<AddOrderDTO>>> AddOrder(AddOrderDTO order)
+        public async Task<ActionResult<ServiceResponse<AddOrderDTO>>> AddOrder([FromBody] AddOrderDTO order)
         {
             if (order == null)
             {
