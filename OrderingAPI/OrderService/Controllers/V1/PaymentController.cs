@@ -38,7 +38,7 @@ namespace OrderService.Controllers.V1
 
         // POST: api/v1/payments
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<AddPaymentDTO>>> AddPayment(AddPaymentDTO payment)
+        public async Task<ActionResult<ServiceResponse<AddPaymentDTO>>> AddPayment([FromBody] AddPaymentDTO payment)
         {
             var result = await _repository.AddPayment(AddPaymentMapper(payment));
 
